@@ -1,0 +1,6 @@
+name: tilgangsstyring_env
+channels:
+  - snowflake
+dependencies:
+  - streamlit
+  - snowflake-snowpark-python
