@@ -1,0 +1,66 @@
+version: "1.0"
+
+# Databases
+databases:
+  - tilgangsstyring_raw:
+      shared: no
+      owner: sysadmin
+      schemas:
+        - seeds
+        - user_input
+
+  - tilgangsstyring:
+      shared: no
+      owner: sysadmin
+      schemas:
+        - stages
+        - intermediates
+        - marts
+        - policies
+
+# Roles
+roles:
+
+  - tilgangsstyring_transformer:
+      member_of:
+        - regnskap_transformer
+      warehouses:
+        - tilgangsstyring_transformer
+      privileges:
+        databases:
+          read:
+            - tilgangsstyring
+            - tilgangsstyring_raw
+          write:
+            - tilgangsstyring
+        schemas:
+          write:
+            - tilgangsstyring.stages
+            - tilgangsstyring.intermediates
+            - tilgangsstyring.marts
+            - tilgangsstyring_raw.seeds
+            - tilgangsstyring_raw.user_input
+      owns:
+        tables:
+          - tilgangsstyring.stages.*
+          - tilgangsstyring.policies.*
+          - tilgangsstyring.marts.*
+          - tilgangsstyring.intermediates.*
+          - tilgangsstyring_raw.seeds.*
+          - tilgangsstyring_raw.user_input.*
+      owner: useradmin
+
+  - tilgangsstyring_reporter:
+      privileges:
+        databases:
+          read:
+            - tilgangsstyring
+        schemas:
+          read:
+            - tilgangsstyring.marts
+      owner: useradmin
+
+warehouses:
+  - tilgangsstyring_transformer:
+      size: x-small
+      owner: sysadmin
