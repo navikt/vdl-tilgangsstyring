@@ -4,4 +4,3 @@ snowflake-connector-python
 pandas
 snowflake-cli-labs
 watchdog
-snowflake-snowpark-python
