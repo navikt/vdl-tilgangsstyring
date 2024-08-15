@@ -2,11 +2,31 @@ import streamlit as st
 import pandas as pd
 from snowflake.connector.errors import ProgrammingError
 from snowflake.snowpark.context import get_active_session
+import re
+
+def valid_email(email) -> bool:
+    # Check if the email contains one “@” symbol
+    if email.count('@') != 1:
+        return False
+
+    # Split the email into local part and domain part
+    local_part, domain_part = email.split('@')
+
+    # Check if both the local part and domain part are not empty
+    if len(local_part) == 0 or len(domain_part) == 0:
+        return False
+
+    # Check if the domain part contains a dot (.)
+    if domain_part.find('.') == -1:
+        return False
+
+    return True
 
 # Get the current credentials
 session = get_active_session()
 
 st.title("Gruppemedlemskap")
+
 gruppe_view = f"""SELECT gruppe, epost FROM gruppemedlemskap WHERE _slettet_dato IS NULL and current_date between fra_dato and til_dato"""
 df_groups = session.sql(gruppe_view).to_pandas()
 st.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
@@ -19,48 +39,52 @@ with st.form("Legg til medlem"):
     available_groups = [row[0] for row in df_available_groups]
     group = st.selectbox("ledig grupper",df_available_groups)
     email = st.text_input("E-post")
-    from_date = st.date_input("Fra dato")
-    to_date = st.date_input("Til dato")
-    submit_group = st.form_submit_button('Legg til')
-
+    from_date_input = st.date_input("Fra dato")
+    to_date_input = st.date_input("Til dato")
+    submit_group = st.form_submit_button('Legg til gruppemeldemskap')
+    
 if submit_group:
-        st.success(st.markdown(from_date.isoformat))
-        #exists_statement = f"""
-        #    SELECT * 
-        #    FROM gruppemedlemskap
-        #    WHERE gruppe = upper('{group}') 
-        #      AND epost = lower('{email}') 
-        #      AND _slettet_dato is null 
-        #      AND current_date between fra_dato and til_dato
-        #"""
-        #df_exists = session.sql(exists_statement).to_pandas()
-        #if df_exists.empty:
-        #    insert_statment=f"""
-        #        INSERT INTO gruppemedlemskap (
-        #            gruppe,
-        #            epost,
-        #            fra_dato, 
-        #            til_dato,
-        #            _opprettet_av,
-        #            _opprettet_dato, 
-        #            _oppdatert_av,
-        #            _oppdatert_dato
-        #        ) 
-        #        VALUES (
-        #            upper('{group}'),
-        #            lower('{email}') ,
-        #            {from_date},
-        #            {to_date},
-        #            '{st.experimental_user["email"]}',
-        #            current_date, 
-        #            '{st.experimental_user["email"]}',
-        #            current_date 
-        #        )"""
-        #    session.sql(insert_statment).collect()
-        #    st.success('Success!', icon="✅")    
-        #else:
-        #    st.success('Already exists')
-        #st.rerun()
+    from_date = f"{from_date_input.day}-{from_date_input.month}-{from_date_input.year}"
+    to_date = f"{to_date_input.day}-{to_date_input.month}-{to_date_input.year}"
+    exists_statement = f"""
+        SELECT * 
+        FROM gruppemedlemskap
+        WHERE gruppe = upper('{group}') 
+          AND epost = lower('{email}') 
+          AND _slettet_dato is null 
+          AND current_date between fra_dato and til_dato
+    """
+    df_exists = session.sql(exists_statement).to_pandas()
+    if df_exists.empty:
+        if valid_email(email):
+            insert_statment=f"""
+                INSERT INTO gruppemedlemskap (
+                    gruppe,
+                    epost,
+                    fra_dato, 
+                    til_dato,
+                    _opprettet_av,
+                    _opprettet_dato, 
+                    _oppdatert_av,
+                    _oppdatert_dato
+                ) VALUES (
+                    upper('{group}'),
+                    lower('{email}') ,
+                    to_date('{from_date}','DD-MM-YYYY'),
+                    to_date('{to_date}','DD-MM-YYYY'),
+                    '{st.experimental_user["email"]}',
+                    current_date, 
+                    '{st.experimental_user["email"]}',
+                    current_date 
+                )
+            """
+            session.sql(insert_statment).collect()
+            st.success('Success!', icon="✅")    
+        else:
+            st.success("Ikke kødd, skriv inn en ordenltig epost adresse")
+    else:
+        st.success('Already exists')
+    st.rerun()
 
 with st.form("Slett Gruppe"):
     available_groups_statement = f"""
