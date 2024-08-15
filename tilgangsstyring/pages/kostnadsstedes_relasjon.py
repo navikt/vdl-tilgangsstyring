@@ -27,7 +27,7 @@ with st.form("Legg til kostnadsstedsrelasjon"):
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
     available_cost_centre_statement = f"""
-            SELECT kostnadssted FROM gyldig_kostnadssted_liste
+            SELECT kostnadssted FROM gyldig_kostnadssted_liste ORDER BY 1
         """
     df_available_cost_centre = session.sql(available_cost_centre_statement).to_pandas()
     group = st.selectbox("Gyldige grupper",df_available_groups)
@@ -68,21 +68,23 @@ if submit_group:
     st.rerun()
 
 with st.form("Slett Gruppe"):
-    available_groups_statement = f"""
+    groups_for_delete_statement = f"""
             SELECT gruppe 
             FROM gruppe_kostnadssted_relasjoner 
             WHERE _slettet_dato is null 
+            ORDER BY 1
         """
-    df_available_groups = session.sql(available_groups_statement).to_pandas()
-    group = st.selectbox("ledig grupper",df_available_groups)
-    available_cost_centre_statement = f"""
+    df_groups_for_delete = session.sql(groups_for_delete_statement).to_pandas()
+    group = st.selectbox("ledig grupper",df_groups_for_delete)
+    cost_centre_for_delete_statement = f"""
             SELECT kostnadssted 
             FROM gruppe_kostnadssted_relasjoner
             WHERE _slettet_dato is null 
               AND gruppe = '{group}'
+            ORDER BY 1
         """
-    df_available_cost_centre_statement = session.sql(available_cost_centre_statement).to_pandas()
-    cost_centre = st.selectbox("ledig kostnadssteder",df_available_cost_centre_statement)
+    df_cost_centre_for_delete = session.sql(cost_centre_for_delete_statement).to_pandas()
+    cost_centre = st.selectbox("ledig kostnadssteder",df_cost_centre_for_delete)
     delete_group = st.form_submit_button('Slett kostnadsstedsrelasjon')
 
 if delete_group:
