@@ -8,69 +8,62 @@ session = get_active_session()
 
 st.title("Grupper")
 
-query= "SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"
-df = session.sql(query)
-queried_data = df.to_pandas()
-st.table(data=queried_data)
-#queried_data = df.to_pandas()
-#st.dataframe(queried_data, columns=["Gruppe", "Gruppebeskrivelse"], hide_index=True)
+gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
+df_groups = session.sql(gruppe_view).to_pandas()
+st.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
 
+with st.form("Legg til gruppe"):
+    group = st.text_input('Gruppenavn:')
+    group_desc = st.text_input('Gruppebeskrivelse:')
+    submit_group = st.form_submit_button('Legg til')
 
-if st.button("+ Lag ny gruppe"):
+if submit_group:
+        exists_statement = f"""
+            SELECT * FROM grupper WHERE gruppe = upper('{group}') and _slettet_dato is null
+        """
+        df_exists = session.sql(exists_statement).to_pandas()
+        if df_exists.empty:
+            insert_statment=f"""
+                INSERT INTO grupper (
+                    gruppe,
+                    gruppe_beskrivelse,
+                    _opprettet_av,
+                    _opprettet_dato, 
+                    _oppdatert_av,
+                    _oppdatert_dato
+                ) 
+                VALUES (
+                    upper('{group}'),
+                    '{group_desc}',
+                    '{st.experimental_user["email"]}',
+                    current_date, 
+                    '{st.experimental_user["email"]}',
+                    current_date 
+                )"""
+            session.sql(insert_statment).collect()
+            st.success('Success!', icon="✅")    
+        else:
+            st.success('Already exists')
+        st.rerun()
 
-    st.title("Lag ny gruppe")
-    with st.form("new_member_form"):
-        gruppenavn = st.text_input("Gruppenavn")
-        gruppe_beskrivelse = st.text_input("Gruppebeskrivelse")
+with st.form("Slett Gruppe"):
+    available_groups_statement = f"""
+            SELECT gruppe FROM grupper WHERE _slettet_dato is null
+        """
+    df_available_groups = session.sql(available_groups_statement).to_pandas()
+    available_groups = [row[0] for row in df_available_groups]
+    group = st.selectbox("ledig grupper",df_available_groups)
+    delete_group = st.form_submit_button('Slett grupppe')
 
-        if st.form_submit_button("Send inn"):
-            query = f"""
-                MERGE INTO grupper old USING (
-                    SELECT 
-                        '{gruppenavn}' as gruppe,
-                        '{gruppe_beskrivelse}' as gruppe_beskrivelse,
-                        current_user as _opprettet_av,
-                        current_date as _opprettet_dato, 
-                        current_user as _oppdatert_av,
-                        current_date as _oppdatert_dato, 
-                        NULL as _slettet_dato
-                    ) new_row ON new_row.gruppe = old.gruppe
-                WHEN MATCHED AND old._slettet_dato IS NULL THEN UPDATE SET 
-                    old.gruppe_beskrivelse = new_row.gruppe_beskrivelse, 
-                    old._oppdatert_av = new_row._oppdatert_av,
-                    old._oppdatert_dato = new_row._oppdatert_dato 
-                WHEN NOT MATCHED THEN INSERT (
-                    old.gruppe, 
-                    old.gruppe_beskrivelse,
-                    old._opprettet_av,
-                    old._opprettet_dato, 
-                    old._oppdatert_av,
-                    old._oppdatert_dato, 
-                    old._slettet_dato
-                ) VALUES (
-                    new_row.gruppe, 
-                    new_row.gruppe_beskrivelse,
-                    new_row._opprettet_av,
-                    new_row._opprettet_dato, 
-                    new_row._oppdatert_av,
-                    new_row._oppdatert_dato, 
-                    new_row._slettet_dato
-                )
-            """
-            st.session_state
-            st.write(query)
-            st.markdown(query)
-            session.run_query(query)
-            session.sql(query)
-            try:
-                st.markdown("hei")
-                session.sql(query)
-                st.success("Suksess: medlem lagt til")
-                #st.session_state.page = "home"
-                st.experimental_rerun()  # Return to home page after submission
-            except ProgrammingError as e:
-                st.error(f"Error executing query: {e}")
-
-
-
+if delete_group:
+    delete_statment=f"""
+        update grupper set 
+            _oppdatert_av = '{st.experimental_user["email"]}',
+            _oppdatert_dato = current_date, 
+            _slettet_dato = current_date
+        where gruppe = upper('{group}')
+        """
+    session.sql(delete_statment).collect()
+    st.success('Success!', icon="✅")  
+    st.rerun()
 
