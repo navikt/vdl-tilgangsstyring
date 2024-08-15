@@ -7,15 +7,27 @@ from snowflake.snowpark.context import get_active_session
 session = get_active_session()
 
 st.title("Grupper")
+st.write(
+    """
+    Tekst her.
+    """
+)
 
 gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
 df_groups = session.sql(gruppe_view).to_pandas()
 st.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
 
+
+st.write(
+    """
+    Legge til en ny gruppe
+    """
+)
 with st.form("Legg til gruppe"):
+
     group = st.text_input('Gruppenavn:')
     group_desc = st.text_input('Gruppebeskrivelse:')
-    submit_group = st.form_submit_button('Legg til')
+    submit_group = st.form_submit_button('Lag ny gruppe')
 
 if submit_group:
         exists_statement = f"""
@@ -46,13 +58,18 @@ if submit_group:
             st.success('Already exists')
         st.rerun()
 
-with st.form("Slett Gruppe"):
+st.write(
+    """
+    Slette gruppe
+    """
+)
+with st.form("Slett gruppe"):
     available_groups_statement = f"""
             SELECT gruppe FROM grupper WHERE _slettet_dato is null
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
     available_groups = [row[0] for row in df_available_groups]
-    group = st.selectbox("ledig grupper",df_available_groups)
+    group = st.selectbox("Velg gruppe",df_available_groups)
     delete_group = st.form_submit_button('Slett grupppe')
 
 if delete_group:
