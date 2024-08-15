@@ -53,7 +53,7 @@ if submit_group:
                     current_date 
                 )"""
             session.sql(insert_statment).collect()
-            st.success('Success!', icon="✅")    
+            st.success('Success!', icon="✅") # Vi får ikke lenger respons 
         else:
             st.success('Already exists')
         st.rerun()
