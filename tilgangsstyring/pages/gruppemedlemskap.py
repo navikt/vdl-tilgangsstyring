@@ -50,7 +50,7 @@ if submit_group:
         SELECT * 
         FROM gruppemedlemskap
         WHERE gruppe = upper('{group}') 
-          AND epost = lower('{email}') 
+          AND epost = initcap('{email}') 
           AND _slettet_dato is null 
           AND current_date between fra_dato and til_dato
     """
@@ -69,7 +69,7 @@ if submit_group:
                     _oppdatert_dato
                 ) VALUES (
                     upper('{group}'),
-                    lower('{email}') ,
+                    initcap('{email}') ,
                     to_date('{from_date}','DD-MM-YYYY'),
                     to_date('{to_date}','DD-MM-YYYY'),
                     '{st.experimental_user["email"]}',
@@ -115,7 +115,7 @@ if delete_group:
             _oppdatert_dato = current_date, 
             _slettet_dato = current_date
         where gruppe = upper('{group}')
-        and epost = lower('{email}')
+        and epost = initcap('{email}')
         """
     session.sql(delete_statment).collect()
     st.success('Success!', icon="✅")  
