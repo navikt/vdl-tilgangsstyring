@@ -81,7 +81,7 @@ if submit_group:
                 )
             """
             session.sql(insert_statment).collect()
-            right.success('Success!', icon="✅")    
+            right.success('Suksess!', icon="✅")    
         else:
             right.error("Ikke kødd, skriv inn en ordentlig e-post adresse", icon="🚨")
     else:
@@ -125,7 +125,7 @@ if delete_group:
         and epost = initcap('{email}')
         """
     session.sql(delete_statment).collect()
-    right.success('Success!', icon="✅")  
+    right.success('Suksess!', icon="✅")  
 
 
 left.write(

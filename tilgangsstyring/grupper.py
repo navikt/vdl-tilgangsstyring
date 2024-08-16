@@ -43,7 +43,7 @@ if submit_group:
                     current_date 
                 )"""
             session.sql(insert_statment).collect()
-            right.success('Success!', icon="✅") 
+            right.success('Suksess!', icon="✅") 
         else:
             right.error('Already exists', icon="🚨")
 
@@ -71,7 +71,7 @@ if delete_group:
         where gruppe = upper('{group}')
         """
     session.sql(delete_statment).collect()
-    right.success('Success!', icon="✅")  
+    right.success('Suksess!', icon="✅")  
 
 left.write(
     """

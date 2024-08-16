@@ -58,9 +58,9 @@ if submit_group:
             )
         """
         session.sql(insert_statment).collect()
-        right.success('Success!', icon="✅") 
+        right.success('Suksess!', icon="✅") 
     else:
-        right.error('Already exists', icon="🚨")
+        right.error('Kostnadsstedsrelasjonen eksisterer allerede', icon="🚨")
 
 right.write(
     """
@@ -97,7 +97,7 @@ if delete_group:
         and kostnadssted = '{cost_centre}'
         """
     session.sql(delete_statment).collect()
-    right.success('Success!', icon="✅")  
+    right.success('Suksess!', icon="✅")  
     # st.rerun()
 
 left.write(
