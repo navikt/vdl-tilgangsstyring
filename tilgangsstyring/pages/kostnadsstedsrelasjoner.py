@@ -65,7 +65,7 @@ if submit_group:
         st.success('Success!', icon="✅")    
     else:
         st.success('Already exists')
-    st.rerun()
+    # st.rerun()
 
 with st.form("Slett Gruppe"):
     groups_for_delete_statement = f"""
@@ -98,5 +98,5 @@ if delete_group:
         """
     session.sql(delete_statment).collect()
     st.success('Success!', icon="✅")  
-    st.rerun()
+    # st.rerun()
 
