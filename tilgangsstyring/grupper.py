@@ -45,7 +45,7 @@ if submit_group:
             session.sql(insert_statment).collect()
             right.success('Suksess!', icon="✅") 
         else:
-            right.error('Already exists', icon="🚨")
+            right.error('Gruppen eksistrer allerede', icon="🚨")
 
 
 right.write(
