@@ -5,6 +5,13 @@ from snowflake.snowpark.context import get_active_session
 # Get the current credentials
 session = get_active_session()
 
+# Check if user has the required role
+current_role = session.get_current_role()
+if current_role != "tilgangsstyring_reporter":
+    st.error(f"Your role {current_role} do not have the necessary permissions to use this app.")
+    st.stop()
+st.success("Successfully authenticated with the correct role.")
+
 st.title("Kostnadsstedsrelasjoner")
 
 left, right = st.columns(2)
