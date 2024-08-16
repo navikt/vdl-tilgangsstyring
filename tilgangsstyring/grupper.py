@@ -1,29 +1,19 @@
 import streamlit as st
-import pandas as pd
-from snowflake.connector.errors import ProgrammingError
 from snowflake.snowpark.context import get_active_session
 
 # Get the current credentials
 session = get_active_session()
 
 st.title("Grupper")
-st.write(
-    """
-    Tekst her.
-    """
-)
-
-gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
-df_groups = session.sql(gruppe_view).to_pandas()
-st.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
+left, right = st.columns(2)
 
 
-st.write(
+right.write(
     """
     Legge til en ny gruppe
     """
 )
-with st.form("Legg til gruppe"):
+with right.form("Legg til gruppe"):
 
     group = st.text_input('Gruppenavn:')
     group_desc = st.text_input('Gruppebeskrivelse:')
@@ -53,17 +43,17 @@ if submit_group:
                     current_date 
                 )"""
             session.sql(insert_statment).collect()
-            st.success('Success!', icon="✅") # Vi får ikke lenger respons 
+            right.success('Success!', icon="✅") 
         else:
-            st.success('Already exists')
-        st.rerun()
+            right.error('Already exists', icon="🚨")
 
-st.write(
+
+right.write(
     """
-    Slette gruppe
+    Slett en gruppe
     """
 )
-with st.form("Slett gruppe"):
+with right.form("Slett gruppe"):
     available_groups_statement = f"""
             SELECT gruppe FROM grupper WHERE _slettet_dato is null
         """
@@ -81,6 +71,16 @@ if delete_group:
         where gruppe = upper('{group}')
         """
     session.sql(delete_statment).collect()
-    st.success('Success!', icon="✅")  
-    st.rerun()
+    right.success('Success!', icon="✅")  
+
+left.write(
+    """
+    Oversikt over grupper
+    """
+)
+
+gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
+df_groups = session.sql(gruppe_view).to_pandas()
+left.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
+
 

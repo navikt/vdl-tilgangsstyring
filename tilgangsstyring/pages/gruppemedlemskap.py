@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-from snowflake.connector.errors import ProgrammingError
 from snowflake.snowpark.context import get_active_session
-import re
 
 def valid_email(email) -> bool:
     # Check if the email contains one “@” symbol
@@ -26,22 +24,26 @@ def valid_email(email) -> bool:
 session = get_active_session()
 
 st.title("Gruppemedlemskap")
+left, right = st.columns(2)
 
-gruppe_view = f"""SELECT gruppe, epost FROM gruppemedlemskap WHERE _slettet_dato IS NULL and current_date between fra_dato and til_dato"""
-df_groups = session.sql(gruppe_view).to_pandas()
-st.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
+right.write(
+    """
+    Legge til et nytt medlem
+    """
+)
 
-with st.form("Legg til medlem"):
+
+with right.form("Legg til medlem"):
     available_groups_statement = f"""
             SELECT gruppe FROM grupper WHERE _slettet_dato is null
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
     available_groups = [row[0] for row in df_available_groups]
-    group = st.selectbox("ledig grupper",df_available_groups)
+    group = st.selectbox("Velg gruppe",df_available_groups)
     email = st.text_input("E-post")
     from_date_input = st.date_input("Fra dato")
     to_date_input = st.date_input("Til dato")
-    submit_group = st.form_submit_button('Legg til gruppemeldemskap')
+    submit_group = st.form_submit_button('Legg til gruppemedlemskap')
     
 if submit_group:
     from_date = f"{from_date_input.day}-{from_date_input.month}-{from_date_input.year}"
@@ -79,14 +81,19 @@ if submit_group:
                 )
             """
             session.sql(insert_statment).collect()
-            st.success('Success!', icon="✅")    
+            right.success('Success!', icon="✅")    
         else:
-            st.success("Ikke kødd, skriv inn en ordenltig epost adresse")
+            right.error("Ikke kødd, skriv inn en ordentlig e-post adresse", icon="🚨")
     else:
-        st.success('Already exists')
-    st.rerun()
+        right.error('Dette medlemmet finnes allerede i gruppen', icon="🚨")
 
-with st.form("Slett Gruppe"):
+
+right.write(
+    """
+    Slette en gruppe
+    """
+)
+with right.form("Slett Gruppe"):
     available_groups_statement = f"""
             SELECT gruppe 
             FROM gruppemedlemskap 
@@ -95,7 +102,7 @@ with st.form("Slett Gruppe"):
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
     available_groups = [row[0] for row in df_available_groups]    
-    group = st.selectbox("ledig grupper",df_available_groups)
+    group = st.selectbox("Velg gruppe",df_available_groups)
     available_emails_statement = f"""
             SELECT epost 
             FROM gruppemedlemskap
@@ -105,7 +112,7 @@ with st.form("Slett Gruppe"):
         """
     df_available_emails = session.sql(available_emails_statement).to_pandas()
     available_emails = [row[0] for row in df_available_emails]    
-    email = st.selectbox("ledig eposter",df_available_emails)
+    email = st.selectbox("Velg e-post",df_available_emails)
     delete_group = st.form_submit_button('Slett gruppemedlemskap')
 
 if delete_group:
@@ -118,6 +125,14 @@ if delete_group:
         and epost = initcap('{email}')
         """
     session.sql(delete_statment).collect()
-    st.success('Success!', icon="✅")  
-    st.rerun()
+    right.success('Success!', icon="✅")  
 
+
+left.write(
+    """
+    Oversikt over medlemmer
+    """
+)
+gruppe_view = f"""SELECT gruppe, epost FROM gruppemedlemskap WHERE _slettet_dato IS NULL and current_date between fra_dato and til_dato"""
+df_groups = session.sql(gruppe_view).to_pandas()
+left.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
