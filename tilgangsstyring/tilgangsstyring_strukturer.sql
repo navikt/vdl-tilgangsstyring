@@ -22,6 +22,16 @@ create table if not exists gruppe_kostnadssted_relasjoner(
     _slettet_dato date
 );
 
+create table if not exists gruppe_oppgave_relasjoner(
+    gruppe varchar(200),
+    oppgave varchar(200),
+    _opprettet_av varchar(40),
+    _opprettet_dato date,
+    _oppdatert_av varchar(40),
+    _oppdatert_dato date,
+    _slettet_dato date
+);
+
 create table if not exists gruppemedlemskap(
     gruppe varchar(200),
     epost varchar(200),
@@ -49,5 +59,5 @@ create or replace view gyldig_kostnadssted_liste as (
 create or replace view gyldige_oppgave_liste as
     select distinct 
         oppgaver_segment_kode as oppgave,
-        oppgaver_segment_beskrivelse  as beskrivelse
+        oppgaver_segment_beskrivelse  as oppgave_navn
     from regnskap.marts.dim_oppgaver;
