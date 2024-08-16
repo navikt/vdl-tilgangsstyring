@@ -24,11 +24,7 @@ def valid_email(email) -> bool:
 session = get_active_session()
 
 # Check if user has the required role
-current_role = session.get_current_role()
-if current_role != "tilgangsstyring_reporter":
-    st.error(f"Your role {current_role} do not have the necessary permissions to use this app.")
-    st.stop()
-st.success("Successfully authenticated with the correct role.")
+session.use_role("TILGANGSSTYRING_REPORTER")
 
 st.title("Gruppemedlemskap")
 left, right = st.columns(2)
