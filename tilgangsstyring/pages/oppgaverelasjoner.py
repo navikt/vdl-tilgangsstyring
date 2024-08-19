@@ -6,7 +6,12 @@ from snowflake.snowpark.context import get_active_session
 session = get_active_session()
 
 # Check if user has the required role
-session.use_role("TILGANGSSTYRING_REPORTER")
+required_role = "TILGANGSSTYRING_REPORTER"
+current_role = session.get_current_role().strip('"')
+if current_role != required_role:
+    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is {required_role}, please switch roles.")
+    st.stop()
+st.success("Successfully authenticated with the correct role.")
 
 st.title("Oppgaverelasjoner")
 
