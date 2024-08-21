@@ -1,3 +1,13 @@
+use role accountadmin;
+create or replace view snowflake_users.account_usage.users as 
+    select login_name, email
+    from snowflake.account_usage.users
+    where not has_password;
+
+use role securityadmin; 
+grant create streamlit on schema tilgangsstyring.app to role tilgangsstyring_developer;
+
+use role tilgangsstyring_developer;
 create table if not exists grupper(
     gruppe varchar(200),
     gruppe_beskrivelse varchar(1000),
@@ -57,15 +67,6 @@ create or replace view gyldige_oppgave_liste as
         oppgaver_segment_kode as oppgave,
         oppgaver_segment_beskrivelse  as oppgave_navn
     from regnskap.marts.dim_oppgaver;
-
-use role accountadmin;
-create or replace view snowflake_users.account_usage.users as 
-    select login_name, email
-    from snowflake.account_usage.users
-    where not has_password;
-use role securityadmin; 
-grant create streamlit on schema tilgangsstyring.app to role tilgangsstyring_admin;
-use role tilgangsstyring_admin;
 
 create or replace view kostnadssted_utflatet as 
     select *
