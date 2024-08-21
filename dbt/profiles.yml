@@ -26,16 +26,3 @@ vdl_tilgangsstyring_profile:
       threads: 8
       client_session_keep_alive: False
       reuse_connections: True
-    snowflake_users:
-      type: snowflake
-      account: "wx23413.europe-west4.gcp"
-      user: "{{ env_var('DBT_USR') }}"
-      role: "accountadmin"
-      # SSO config
-      authenticator: externalbrowser
-      database: "snowflake_user"
-      warehouse: "tilgangsstyring_app"
-      schema: "account_usage"
-      threads: 8
-      client_session_keep_alive: False
-      reuse_connections: True

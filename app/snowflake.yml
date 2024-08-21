@@ -2,7 +2,7 @@ definition_version: "1.1"
 streamlit:
   name: tilgangsstyring
   stage: tilgangsstyring_stage
-  query_warehouse: tilgangsstyring_transformer
+  query_warehouse: tilgangsstyring_app
   main_file: grupper.py
   env_file: environment.yml
   pages_dir: pages/

@@ -24,7 +24,7 @@ def valid_email(email) -> bool:
 session = get_active_session()
 
 # Check if user has the required role
-required_role = "TILGANGSSTYRING_REPORTER"
+required_role = "TILGANGSSTYRING_ADMIN"
 current_role = session.get_current_role().strip('"')
 if current_role != required_role:
     st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is {required_role}, please switch roles.")
@@ -46,9 +46,12 @@ with right.form("Legg til medlem"):
             SELECT gruppe FROM grupper WHERE _slettet_dato is null
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
-    available_groups = [row[0] for row in df_available_groups]
     group = st.selectbox("Velg gruppe",df_available_groups)
-    email = st.text_input("E-post")
+    available_users_statement = f"""
+            SELECT email FROM users 
+        """
+    df_available_users = session.sql(available_users_statement).to_pandas()
+    email = st.selectbox("E-post",df_available_users) 
     from_date_input = st.date_input("Fra dato")
     to_date_input = st.date_input("Til dato")
     submit_group = st.form_submit_button('Legg til gruppemedlemskap')
@@ -106,20 +109,18 @@ with right.form("Slett Gruppe"):
             SELECT gruppe 
             FROM gruppemedlemskap 
             WHERE _slettet_dato is null 
-              AND current_date between fra_dato and til_dato
+              AND current_date <= til_dato
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
-    available_groups = [row[0] for row in df_available_groups]    
     group = st.selectbox("Velg gruppe",df_available_groups)
     available_emails_statement = f"""
             SELECT epost 
             FROM gruppemedlemskap
             WHERE _slettet_dato is null 
               AND gruppe = '{group}'
-              AND current_date between fra_dato and til_dato
+              AND current_date <= til_dato
         """
     df_available_emails = session.sql(available_emails_statement).to_pandas()
-    available_emails = [row[0] for row in df_available_emails]    
     email = st.selectbox("Velg e-post",df_available_emails)
     delete_group = st.form_submit_button('Slett gruppemedlemskap')
 
@@ -141,6 +142,12 @@ left.write(
     Oversikt over medlemmer
     """
 )
-gruppe_view = f"""SELECT gruppe, epost FROM gruppemedlemskap WHERE _slettet_dato IS NULL and current_date between fra_dato and til_dato"""
+gruppe_view = f"""
+    SELECT gruppe
+         , epost 
+    FROM gruppemedlemskap 
+    WHERE _slettet_dato IS NULL 
+    AND current_date <= til_dato
+    """
 df_groups = session.sql(gruppe_view).to_pandas()
 left.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)

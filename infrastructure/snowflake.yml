@@ -27,6 +27,11 @@ roles:
         schemas:
           read:
             - snowflake_users.account_usage
+          write:
+            - snowflake_users.account_usage
+        tables:
+          read: 
+            - snowflake_users.account_usage.*
       owner: useradmin
 
   - tilgangsstyring_admin:
@@ -42,8 +47,15 @@ roles:
           write:
             - tilgangsstyring
         schemas:
+          read:
+            - tilgangsstyring.app
           write:
             - tilgangsstyring.app
+        tables:
+          read:
+            - tilgangsstyring.app.*
+          write:
+            - tilgangsstyring.app.*
       owns:
         tables:
           - tilgangsstyring.app.*
