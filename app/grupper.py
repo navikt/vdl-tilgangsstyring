@@ -1,6 +1,9 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 
+# Set page layout to wide
+st.set_page_config(layout="wide")
+
 # Get the current credentials
 session = get_active_session()
 
@@ -13,12 +16,12 @@ if current_role != required_role:
 st.success("Successfully authenticated with the correct role.")
 
 st.title("Grupper")
-left, right = st.columns(2)
+left, right = st.columns([0.6, 0.4])
 
 
 right.write(
     """
-    Legge til en ny gruppe
+    Legg til en ny gruppe
     """
 )
 with right.form("Legg til gruppe"):

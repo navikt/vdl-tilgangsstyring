@@ -1,6 +1,8 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 
+# Set page layout to wide
+st.set_page_config(layout="wide")
 
 # Get the current credentials
 session = get_active_session()
@@ -15,12 +17,12 @@ st.success("Successfully authenticated with the correct role.")
 
 st.title("Oppgaverelasjoner")
 
-left, right = st.columns(2)
+left, right = st.columns([0.7, 0.3])
 
 
 right.write(
     """
-    Legge til en oppgaverelasjon
+    Legg til en oppgaverelasjon
     """
 )
 
@@ -72,12 +74,12 @@ if submit_group:
 
 right.write(
     """
-    Slette en oppgaverelasjon
+    Slett en oppgaverelasjon
     """
 )
 with right.form("Slett Gruppe"):
     groups_for_delete_statement = f"""
-            SELECT gruppe 
+            SELECT distinct gruppe 
             FROM gruppe_oppgave_relasjoner 
             WHERE _slettet_dato is null 
             ORDER BY 1

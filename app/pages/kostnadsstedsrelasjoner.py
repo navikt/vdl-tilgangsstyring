@@ -1,6 +1,8 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 
+# Set page layout to wide
+st.set_page_config(layout="wide")
 
 # Get the current credentials
 session = get_active_session()
@@ -15,12 +17,12 @@ st.success("Successfully authenticated with the correct role.")
 
 st.title("Kostnadsstedsrelasjoner")
 
-left, right = st.columns(2)
+left, right = st.columns([0.7, 0.3])
 
 
 right.write(
     """
-    Legge til en kostnadsstedsrelasjon
+    Legg til en kostnadsstedsrelasjon
     """
 )
 
@@ -72,23 +74,24 @@ if submit_group:
 
 right.write(
     """
-    Slette en kostnadsstedsrelasjon
+    Slett en kostnadsstedsrelasjon
     """
 )
 with right.form("Slett Gruppe"):
     groups_for_delete_statement = f"""
-            SELECT gruppe 
+            SELECT distinct gruppe 
             FROM gruppe_kostnadssted_relasjoner 
             WHERE _slettet_dato is null 
             ORDER BY 1
         """
     df_groups_for_delete = session.sql(groups_for_delete_statement).to_pandas()
     group = st.selectbox("Velg gruppe",df_groups_for_delete)
+
     cost_centre_for_delete_statement = f"""
             SELECT kostnadssted 
             FROM gruppe_kostnadssted_relasjoner
             WHERE _slettet_dato is null 
-              AND gruppe = '{group}'
+              AND gruppe = upper('{group}')
             ORDER BY 1
         """
     df_cost_centre_for_delete = session.sql(cost_centre_for_delete_statement).to_pandas()
@@ -96,14 +99,14 @@ with right.form("Slett Gruppe"):
     delete_group = st.form_submit_button('Slett kostnadsstedsrelasjon')
 
 if delete_group:
-    delete_statment=f"""
+    delete_statment = f"""
         update gruppe_kostnadssted_relasjoner set 
             _oppdatert_av = '{st.experimental_user["email"]}',
             _oppdatert_dato = current_date, 
             _slettet_dato = current_date
         where gruppe = upper('{group}')
-        and kostnadssted = '{cost_centre}'
-        """
+        and kostnadssted = upper('{cost_centre}')
+    """
     session.sql(delete_statment).collect()
     right.success('Suksess!', icon="✅")  
     # st.rerun()

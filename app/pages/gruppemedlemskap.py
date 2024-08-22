@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 from snowflake.snowpark.context import get_active_session
 
+# Set page layout to wide
+st.set_page_config(layout="wide")
+
 def valid_email(email) -> bool:
     # Check if the email contains one “@” symbol
     if email.count('@') != 1:
@@ -32,11 +35,11 @@ if current_role != required_role:
 st.success("Successfully authenticated with the correct role.")
 
 st.title("Gruppemedlemskap")
-left, right = st.columns(2)
+left, right = st.columns([0.7, 0.3])
 
 right.write(
     """
-    Legge til et nytt medlem
+    Legg til et nytt medlem
     """
 )
 
@@ -101,23 +104,24 @@ if submit_group:
 
 right.write(
     """
-    Slette en gruppe
+    Slett medlem fra gruppe
     """
 )
 with right.form("Slett Gruppe"):
     available_groups_statement = f"""
-            SELECT gruppe 
+            SELECT distinct gruppe 
             FROM gruppemedlemskap 
             WHERE _slettet_dato is null 
               AND current_date <= til_dato
         """
     df_available_groups = session.sql(available_groups_statement).to_pandas()
     group = st.selectbox("Velg gruppe",df_available_groups)
+
     available_emails_statement = f"""
             SELECT epost 
             FROM gruppemedlemskap
             WHERE _slettet_dato is null 
-              AND gruppe = '{group}'
+              AND gruppe = upper('{group}')
               AND current_date <= til_dato
         """
     df_available_emails = session.sql(available_emails_statement).to_pandas()
@@ -144,7 +148,7 @@ left.write(
 )
 gruppe_view = f"""
     SELECT gruppe
-         , epost 
+         , epost, fra_dato, til_dato 
     FROM gruppemedlemskap 
     WHERE _slettet_dato IS NULL 
     AND current_date <= til_dato
