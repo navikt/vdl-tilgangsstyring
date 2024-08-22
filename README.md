@@ -12,7 +12,7 @@ Deploy Streamlit til Snowflake fra ```/app```
 ```shell 
 snow streamlit deploy --connection tilgangsstyring --replace
 ```
-PS: her må Snowflake CLI connection objektet ```tilgangsstyring``` være definert (dette må gjøres manuelt per nå).
+PS: her må Snowflake CLI connection objektet ```tilgangsstyring``` være definert ved å kjøre ```snow --info```og editere ```config.toml```-filen (dette må gjøres manuelt per nå).
 
 ## Hva virker ikke
 - Oppdatering av tabeller i snowflake for å ha en oversikt over tilganger (user_login og kostnadssted/oppgave) som et resultat av hva brukere legger inn i appen. 
