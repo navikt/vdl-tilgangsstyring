@@ -27,12 +27,13 @@ def valid_email(email) -> bool:
 session = get_active_session()
 
 # Check if user has the required role
-required_role = "TILGANGSSTYRING_ADMIN"
+required_roles = ("TILGANGSSTYRING_ADMIN", "TILGANGSSTYRING_DEVELOPER")
 current_role = session.get_current_role().strip('"')
-if current_role != required_role:
-    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is {required_role}, please switch roles.")
+if current_role not in required_roles:
+    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is TILGANGSSTYRING_ADMIN, please switch roles.")
     st.stop()
 st.success("Successfully authenticated with the correct role.")
+
 
 st.title("Gruppemedlemskap")
 left, right = st.columns([0.7, 0.3])
@@ -54,7 +55,7 @@ with right.form("Legg til medlem"):
             SELECT email FROM users 
         """
     df_available_users = session.sql(available_users_statement).to_pandas()
-    email = st.selectbox("E-post",df_available_users) 
+    email = st.selectbox("E-post",df_available_users) # TODO: bytte til multiselect?
     from_date_input = st.date_input("Fra dato")
     to_date_input = st.date_input("Til dato")
     submit_group = st.form_submit_button('Legg til gruppemedlemskap')
@@ -108,6 +109,7 @@ right.write(
     """
 )
 with right.form("Slett Gruppe"):
+
     available_groups_statement = f"""
             SELECT distinct gruppe 
             FROM gruppemedlemskap 
@@ -125,7 +127,7 @@ with right.form("Slett Gruppe"):
               AND current_date <= til_dato
         """
     df_available_emails = session.sql(available_emails_statement).to_pandas()
-    email = st.selectbox("Velg e-post",df_available_emails)
+    email = st.selectbox("Velg e-post", df_available_emails)
     delete_group = st.form_submit_button('Slett gruppemedlemskap')
 
 if delete_group:

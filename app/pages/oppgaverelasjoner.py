@@ -8,16 +8,17 @@ st.set_page_config(layout="wide")
 session = get_active_session()
 
 # Check if user has the required role
-required_role = "TILGANGSSTYRING_ADMIN"
+required_roles = ("TILGANGSSTYRING_ADMIN", "TILGANGSSTYRING_DEVELOPER")
 current_role = session.get_current_role().strip('"')
-if current_role != required_role:
-    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is {required_role}, please switch roles.")
+if current_role not in required_roles:
+    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is TILGANGSSTYRING_ADMIN, please switch roles.")
     st.stop()
 st.success("Successfully authenticated with the correct role.")
 
+
 st.title("Oppgaverelasjoner")
 
-left, right = st.columns([0.7, 0.3])
+left, right = st.columns([0.7, 0.3]) # lage venstre side litt bredere enn høyre side
 
 
 right.write(
