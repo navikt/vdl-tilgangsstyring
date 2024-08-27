@@ -38,11 +38,8 @@ st.success("Successfully authenticated with the correct role.")
 st.title("Gruppemedlemskap")
 left, right = st.columns([0.7, 0.3])
 
-right.write(
-    """
-    Legg til et nytt medlem
-    """
-)
+
+right.markdown( " ### Legg til et nytt medlem")
 
 
 with right.form("Legg til medlem"):
@@ -103,11 +100,8 @@ if submit_group:
         right.error('Dette medlemmet finnes allerede i gruppen', icon="🚨")
 
 
-right.write(
-    """
-    Slett medlem fra gruppe
-    """
-)
+
+right.markdown( " ### Slett medlem fra gruppe")
 with right.form("Slett Gruppe"):
 
     available_groups_statement = f"""
@@ -142,12 +136,8 @@ if delete_group:
     session.sql(delete_statment).collect()
     right.success('Suksess!', icon="✅")  
 
+left.markdown( " ### Oversikt over medlemmer")
 
-left.write(
-    """
-    Oversikt over medlemmer
-    """
-)
 gruppe_view = f"""
     SELECT gruppe
          , epost, fra_dato, til_dato 

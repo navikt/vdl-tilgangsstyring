@@ -21,11 +21,7 @@ st.title("Kostnadsstedsrelasjoner")
 left, right = st.columns([0.7, 0.3])
 
 
-right.write(
-    """
-    Legg til en kostnadsstedsrelasjon
-    """
-)
+right.markdown( " ### Legg til en kostnadsstedsrelasjon")
 
 
 with right.form("Legg til kostnadsstedsrelasjon"):
@@ -73,11 +69,9 @@ if submit_group:
     else:
         right.error('Kostnadsstedsrelasjonen eksisterer allerede', icon="🚨")
 
-right.write(
-    """
-    Slett en kostnadsstedsrelasjon
-    """
-)
+
+right.markdown( " ### Slett en kostnadsstedsrelasjon")
+
 with right.form("Slett Gruppe"):
     groups_for_delete_statement = f"""
             SELECT distinct gruppe 
@@ -112,11 +106,7 @@ if delete_group:
     right.success('Suksess!', icon="✅")  
     # st.rerun()
 
-left.write(
-    """
-    Oversikt over alle kostnadsstedsrelasjoner
-    """
-)
+left.markdown( " ### Oversikt over alle kostnadsstedsrelasjoner")
 gruppe_view = f"""
     SELECT 
         grp.gruppe, 

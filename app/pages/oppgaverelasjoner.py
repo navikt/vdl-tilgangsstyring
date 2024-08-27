@@ -21,11 +21,7 @@ st.title("Oppgaverelasjoner")
 left, right = st.columns([0.7, 0.3]) # lage venstre side litt bredere enn høyre side
 
 
-right.write(
-    """
-    Legg til en oppgaverelasjon
-    """
-)
+right.markdown(" ### Legg til en oppgaverelasjon")
 
 
 with right.form("Legg til oppgaverelasjon"):
@@ -73,11 +69,9 @@ if submit_group:
     else:
         right.error('Oppgaverelasjon eksisterer allerede', icon="🚨")
 
-right.write(
-    """
-    Slett en oppgaverelasjon
-    """
-)
+
+right.markdown(" ### Slett en oppgaverelasjon")
+
 with right.form("Slett Gruppe"):
     groups_for_delete_statement = f"""
             SELECT distinct gruppe 
@@ -111,11 +105,9 @@ if delete_group:
     right.success('Suksess!', icon="✅")  
     # st.rerun()
 
-left.write(
-    """
-    Oversikt over alle oppgaverelasjoner
-    """
-)
+
+left.markdown(" ### Oversikt over alle oppgaverelasjoner")
+
 gruppe_view = f"""
     SELECT 
         grp.gruppe, 

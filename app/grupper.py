@@ -19,11 +19,7 @@ st.title("Grupper")
 left, right = st.columns([0.6, 0.4]) # lage venstre side litt bredere enn høyre side
 
 
-right.write(
-    """
-    Legg til en ny gruppe
-    """
-)
+right.markdown( " ### Legg til en ny gruppe")
 with right.form("Legg til gruppe"):
 
     group = st.text_input('Gruppenavn:')
@@ -59,11 +55,7 @@ if submit_group:
             right.error('Gruppen eksistrer allerede', icon="🚨")
 
 
-right.write(
-    """
-    Slett en gruppe
-    """
-)
+right.markdown( " ### Slett en gruppe")
 with right.form("Slett gruppe"):
     available_groups_statement = f"""
             SELECT gruppe FROM grupper WHERE _slettet_dato is null
@@ -84,11 +76,7 @@ if delete_group:
     session.sql(delete_statment).collect()
     right.success('Suksess!', icon="✅")  
 
-left.write(
-    """
-    Oversikt over grupper
-    """
-)
+left.markdown( " ### Oversikt over grupper")
 
 gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
 df_groups = session.sql(gruppe_view).to_pandas()
