@@ -1,8 +1,9 @@
 snowbird @ git+https://github.com/navikt/snowbird
-streamlit 
-snowflake-connector-python 
+streamlit
+snowflake-connector-python
 pandas
 snowflake-cli-labs
 watchdog
 dbt-snowflake<1.9.0,>=1.8.0
-dbt-core<1.9.0,>=1.8.0  
+dbt-core<1.9.0,>=1.8.0
+graphviz
