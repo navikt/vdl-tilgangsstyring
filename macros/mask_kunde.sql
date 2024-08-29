@@ -9,7 +9,7 @@
         end
     {% endset %}
 
-    {% do vdl_macros.create_masking_policy(
+    {% do create_masking_policy(
         name="mask_kunde",
         val_type="string",
         input_params=["kunde_type string"],

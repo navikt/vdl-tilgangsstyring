@@ -9,7 +9,7 @@
         end
     {% endset %}
 
-    {% do vdl_macros.create_masking_policy(
+    {% do create_masking_policy(
         name="mask_string",
         val_type="string",
         input_params=["kostnadssted_kode string"],
