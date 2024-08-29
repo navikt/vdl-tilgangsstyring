@@ -7,4 +7,4 @@ streamlit:
   env_file: environment.yml
   pages_dir: pages/
   additional_source_files:
-    - common/snow_query.py
+    - common/build_table.py
