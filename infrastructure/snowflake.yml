@@ -7,6 +7,7 @@ databases:
       owner: sysadmin
       schemas:
         - app
+        - policies 
   - snowflake_users:
       shared: no
       owner: accountadmin
@@ -49,17 +50,57 @@ roles:
         schemas:
           read:
             - tilgangsstyring.app
+            - tilgangsstyring.policies 
           write:
             - tilgangsstyring.app
+            - tilgangsstyring.policies 
         tables:
           read:
             - tilgangsstyring.app.*
+            - tilgangsstyring.policies.*
           write:
             - tilgangsstyring.app.*
+            - tilgangsstyring.policies.*
+      owner: useradmin
+
+  - tilgangsstyring_developer:
+      member_of:
+        - tilgangsstyring_admin
+      warehouses:
+        - tilgangsstyring_app
+      privileges:
+        databases:
+          read:
+            - tilgangsstyring
+          write:
+            - tilgangsstyring
+        schemas:
+          read:
+            - tilgangsstyring.app
+            - tilgangsstyring.policies 
+          write:
+            - tilgangsstyring.app
+            - tilgangsstyring.policies  
       owns:
         tables:
           - tilgangsstyring.app.*
+          - tilgangsstyring.policies.*
       owner: useradmin
+  - tilgangsstyring_reporter:
+      privileges:
+        databases:
+          read:
+            - tilgangsstyring
+          write:
+            - tilgangsstyring
+        schemas:
+          read:
+            - tilgangsstyring.policies 
+        tables:
+          read:
+            - tilgangsstyring.policies.*
+      owner: useradmin
+
 
 warehouses:
   - tilgangsstyring_app:
