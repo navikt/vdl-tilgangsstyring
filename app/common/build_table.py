@@ -19,7 +19,9 @@ def build_cost_centre_table(session: Session) -> None:
         join gruppemedlemskap medlem on grupper.gruppe = medlem.gruppe
         join users on lower(users.email) = lower(medlem.epost)
         join kostnadssteder on kostnadssteder.kostnadssteder_segment_kode_forelder = relasjon.kostnadssted
+        order by 2
     """
+    session.sql(sql).collect()
 
 def build_task_table(session: Session) -> None:
     sql = """
@@ -32,4 +34,5 @@ def build_task_table(session: Session) -> None:
         join gruppemedlemskap medlem on grupper.gruppe = medlem.gruppe
         join users on lower(users.email) = lower(medlem.epost)
     """
+    session.sql(sql).collect()
 
