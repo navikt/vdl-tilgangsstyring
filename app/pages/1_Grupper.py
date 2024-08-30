@@ -1,8 +1,9 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 from common.utils import check_role
+
 # Set page layout to wide
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Grupper")
 
 # Get the current credentials
 session = get_active_session()

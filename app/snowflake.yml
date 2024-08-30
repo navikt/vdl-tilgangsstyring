@@ -3,7 +3,7 @@ streamlit:
   name: tilgangsstyring
   stage: tilgangsstyring_stage
   query_warehouse: tilgangsstyring_app
-  main_file: grupper.py
+  main_file: Hjem.py
   env_file: environment.yml
   pages_dir: pages/
   additional_source_files:
