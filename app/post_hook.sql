@@ -1,1 +1,1 @@
-grant usage on streamlit tilgangsstyring to role tilgangsstyring_admin;
+grant usage on streamlit tilgangsstyring to role tilgangsstyring_user;

@@ -1,12 +1,12 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
-
+from common.utils import check_role
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
 # Get the current credentials
 session = get_active_session()
-
+check_role(session)
 # Check if user has the required role
 required_roles = ("TILGANGSSTYRING_ADMIN", "TILGANGSSTYRING_DEVELOPER")
 current_role = session.get_current_role().strip('"')
