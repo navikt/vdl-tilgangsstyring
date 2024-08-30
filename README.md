@@ -24,3 +24,15 @@ PS: her må Snowflake CLI connection objektet ```tilgangsstyring``` være define
 - Snow CLI med Github actions
 - __Lage__ dbt repo med ´row access policy´ macros
 - Legge inn Snowflake CLI connection variabel som en del av miljøet? 
+
+
+## Fjerning av Policies 
+```sql
+use database db; 
+select distinct
+'ALTER '||ref_entity_domain||
+' '||ref_database_name||'.'||ref_schema_name||'.'||ref_entity_name||
+' MODIFY COLUMN '||ref_column_name||
+' UNSET MASKING POLICY;'
+from table(information_schema.policy_references(policy_name=>'policies.<policy name>'));
+```

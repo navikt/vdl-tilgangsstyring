@@ -35,7 +35,7 @@ roles:
             - snowflake_users.account_usage.*
       owner: useradmin
 
-  - tilgangsstyring_admin:
+  - tilgangsstyring_user:
       member_of:
         - regnskap_reporter
         - snowflake_users_reader
@@ -65,7 +65,7 @@ roles:
 
   - tilgangsstyring_developer:
       member_of:
-        - tilgangsstyring_admin
+        - tilgangsstyring_user
       warehouses:
         - tilgangsstyring_app
       privileges:
