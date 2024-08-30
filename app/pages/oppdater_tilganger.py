@@ -3,12 +3,15 @@ from snowflake.snowpark.context import get_active_session
 from common.build_table import build_cost_centre_table, build_task_table
 
 # Set page layout to wide
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Oppdater tilganger")
 
 # Get the current credentials
 session = get_active_session()
 
-st.title("Oppdater tilgangsstyring")
+st.title("Oppdater tilganger")
+st.markdown("Oppdatere tilganger som blir sendt videre til MicroStrategy (MSTR). ")
+st.markdown("Dersom man glemmer å klikke 'Oppdater' her så vil eventuelle endringer i grupper, kostnadsstedsrelasjoner og oppgaverelasjoner bli lagret i Snowflake, men ikke bli sendt til MSTR.")
+
 
 update_data = st.button("Oppdater")
 

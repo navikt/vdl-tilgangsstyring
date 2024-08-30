@@ -1,9 +1,9 @@
 import streamlit as st
-import pandas as pd
 from snowflake.snowpark.context import get_active_session
 from common.utils import check_role
+
 # Set page layout to wide
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Gruppemedlemskap")
 
 def valid_email(email) -> bool:
     # Check if the email contains one “@” symbol
