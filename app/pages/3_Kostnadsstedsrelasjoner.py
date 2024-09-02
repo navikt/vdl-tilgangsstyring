@@ -8,13 +8,6 @@ st.set_page_config(layout="wide", page_title="Kostnadsstedsrelasjoner")
 # Get the current credentials
 session = get_active_session()
 check_role(session)
-# Check if user has the required role
-required_roles = ("TILGANGSSTYRING_ADMIN", "TILGANGSSTYRING_DEVELOPER")
-current_role = session.get_current_role().strip('"')
-if current_role not in required_roles:
-    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is TILGANGSSTYRING_ADMIN, please switch roles.")
-    st.stop()
-st.success("Successfully authenticated with the correct role.")
 
 
 st.title("Kostnadsstedsrelasjoner")

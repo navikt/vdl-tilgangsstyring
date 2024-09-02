@@ -37,7 +37,6 @@ roles:
 
   - tilgangsstyring_user:
       member_of:
-        - regnskap_reporter
         - snowflake_users_reader
       warehouses:
         - tilgangsstyring_app
@@ -85,7 +84,7 @@ roles:
         tables:
           - tilgangsstyring.app.*
           - tilgangsstyring.policies.*
-      owner: useradmin
+      owner: useradmin    
   - tilgangsstyring_reporter:
       privileges:
         databases:

@@ -6,8 +6,20 @@ create or replace view snowflake_users.account_usage.users as
 
 use role securityadmin; 
 grant create streamlit on schema tilgangsstyring.app to role tilgangsstyring_developer;
+--
+grant imported privileges on database tlost__oebs_prod to role tilgangsstyring_user;
+--grant usage on database tlost__oebs_prod to role tilgangsstyring_user;
+--grant usage on schema tlost__oebs_prod.apps to role tilgangsstyring_user;
+--grant select on view tlost__oebs_prod.apps.xxrtv_gl_segment_v to role tilgangsstyring_user;
+--grant select on view tlost__oebs_prod.apps.xxrtv_gl_hierarki_v to role tilgangsstyring_user;
 
 use role tilgangsstyring_developer;
+
+create or replace view users as 
+    select * 
+    from snowflake_users.account_usage.users
+;
+
 create table if not exists grupper(
     gruppe varchar(200),
     gruppe_beskrivelse varchar(1000),
@@ -49,29 +61,3 @@ create table if not exists gruppemedlemskap(
     _oppdatert_dato date,
     _slettet_dato date
 );
-
-create or replace view gyldig_kostnadssted_liste as (
-    select distinct kostnadssted, kostnadssted_navn 
-    from (
-    select kostnadssteder_segment_kode_niva_1 as kostnadssted, kostnadssteder_segment_beskrivelse_niva_1 as kostnadssted_navn from regnskap.marts.dim_kostnadssteder
-    union all
-    select kostnadssteder_segment_kode_niva_2, kostnadssteder_segment_beskrivelse_niva_2 from regnskap.marts.dim_kostnadssteder
-    union all
-    select kostnadssteder_segment_kode_niva_3, kostnadssteder_segment_beskrivelse_niva_3 from regnskap.marts.dim_kostnadssteder
-    union all
-    select kostnadssteder_segment_kode_niva_4, kostnadssteder_segment_beskrivelse_niva_4 from regnskap.marts.dim_kostnadssteder
-    )
-);
-create or replace view gyldige_oppgave_liste as
-    select distinct 
-        oppgaver_segment_kode as oppgave,
-        oppgaver_segment_beskrivelse  as oppgave_navn
-    from regnskap.marts.dim_oppgaver;
-
-create or replace view kostnadssted_utflatet as 
-    select *
-    from regnskap.marts.dim_kostnadssteder_utflatet;
-
-create or replace view users as 
-    select * 
-    from snowflake_users.account_usage.users;

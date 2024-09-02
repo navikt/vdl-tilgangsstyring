@@ -1,19 +1,13 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
+from common.utils import check_role
 
 # Set page layout to wide
 st.set_page_config(page_title="Hjem", layout="wide")
 
 # Get the current credentials
 session = get_active_session()
-
-# Check if user has the required role
-required_roles = ("TILGANGSSTYRING_ADMIN", "TILGANGSSTYRING_DEVELOPER")
-current_role = session.get_current_role().strip('"')
-if current_role not in required_roles:
-    st.error(f"Your role {current_role} do not have the necessary permissions to use this app. Required role is TILGANGSSTYRING_ADMIN, please switch roles.")
-    st.stop()
-st.success("Successfully authenticated with the correct role.")
+check_role(session)
 
 
 st.title("Velkommen til Tilgangsstyring!")
@@ -31,3 +25,26 @@ st.markdown("""
 #st.markdown("### Last opp fil")
 #st.text("Her kan du laste opp en fil med eksisterende tilganger.")
 #uploaded_file = st.file_uploader("Last opp fil")
+
+sql = """
+create or replace view gyldig_kostnadssted_liste as 
+select distinct  
+      flex_value as kostnadssted
+    , description as kostnadssted_navn 
+from tlost__oebs_prod.apps.xxrtv_gl_segment_v 
+where flex_value_set_name = 'OR_KSTED'
+order by 1;
+"""
+session.sql(sql).collect()
+sql = """
+create or replace view gyldige_oppgave_liste as
+select distinct
+      flex_value as oppgave
+    , description as oppgave_navn 
+from tlost__oebs_prod.apps.xxrtv_gl_segment_v 
+where flex_value_set_name = 'OR_AKTIVITET' 
+and coalesce(end_date_active,to_timestamp('9999','yyyy')) >= to_timestamp('2023','yyyy')
+and enabled_flag = 'Y'
+order by 1
+"""
+session.sql(sql).collect()
