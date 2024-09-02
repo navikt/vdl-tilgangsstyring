@@ -20,6 +20,13 @@ st.title("Velkommen til Tilgangsstyring!")
 st.markdown("""Denne Streamlit appen gjør det mulig å enkelt opprette grupper 
             som skal ha tilgang til ulike kostnadssteder og oppgaver i MicroStrategy. """)
 st.markdown("Her kan du:")
+st.markdown("""
+    * Lage nye tilgangsgrupper
+    * Legge til medlemmer i tilgangsgrupper
+    * Legge til kostnadsstedsrelasjoner i tilgangsgruppene (i.e. hvilke kostnadssteder medlemmene i gruppen skal ha tilgang til)
+    * Legge til oppgaverelasjoner i tilgangsgruppene (i.e. hvilke oppgaver medlemmene i gruppen skal ha tilgang til)
+
+""")
 
 #st.markdown("### Last opp fil")
 #st.text("Her kan du laste opp en fil med eksisterende tilganger.")
