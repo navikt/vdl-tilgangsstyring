@@ -4,7 +4,7 @@ def build_cost_centre_table(session: Session) -> None:
     sql = """
         create or replace table kostnadssteder as 
             select * 
-            from tlost__oebs_prod.apps.xxrtv_gl_hierarki_v
+            from tilgangsstyring__raw.oebs.xxrtv_gl_hierarki_v
             where flex_value_set_name = 'OR_KSTED' 
               and lower(hierarchy_code) = 'intern_ksted'
     """

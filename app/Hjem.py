@@ -21,30 +21,3 @@ st.markdown("""
     * Legge til oppgaverelasjoner i tilgangsgruppene (i.e. hvilke oppgaver medlemmene i gruppen skal ha tilgang til)
 
 """)
-
-#st.markdown("### Last opp fil")
-#st.text("Her kan du laste opp en fil med eksisterende tilganger.")
-#uploaded_file = st.file_uploader("Last opp fil")
-
-sql = """
-create or replace view gyldig_kostnadssted_liste as 
-select distinct  
-      flex_value as kostnadssted
-    , description as kostnadssted_navn 
-from tlost__oebs_prod.apps.xxrtv_gl_segment_v 
-where flex_value_set_name = 'OR_KSTED'
-order by 1;
-"""
-session.sql(sql).collect()
-sql = """
-create or replace view gyldige_oppgave_liste as
-select distinct
-      flex_value as oppgave
-    , description as oppgave_navn 
-from tlost__oebs_prod.apps.xxrtv_gl_segment_v 
-where flex_value_set_name = 'OR_AKTIVITET' 
-and coalesce(end_date_active,to_timestamp('9999','yyyy')) >= to_timestamp('2023','yyyy')
-and enabled_flag = 'Y'
-order by 1
-"""
-session.sql(sql).collect()
