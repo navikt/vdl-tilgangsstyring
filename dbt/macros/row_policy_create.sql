@@ -6,7 +6,7 @@
             {{ param }} {% if not loop.last %},{% endif %}
             {% endfor %}
         )
-        returns boolean -> return 1;
+        returns boolean -> true;
     {% endset %}
     {% do run_query(create_sql) %}
 

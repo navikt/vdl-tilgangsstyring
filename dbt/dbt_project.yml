@@ -2,6 +2,11 @@ name: 'vdl_tilgangsstyring'
 version: '0.1.0'
 config-version: 2
 
+vars:
+  policy_schema: policies
+
+profile: "vdl_tilgangsstyring_profile"
+
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 macro-paths: ["macros"]
