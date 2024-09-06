@@ -91,7 +91,7 @@ if submit_group:
             else:
                 right.error("Ikke kødd, skriv inn en ordentlig e-post adresse", icon="🚨")
         else:
-            right.error("Feil: 'Fra dato' må være tidligere enn eller lik 'Til dato'. Vennligst sjekk datoene og prøv igjen.", icon="🚨")
+            right.error("Ugyldig dato: 'Fra dato' må være tidligere enn eller lik 'Til dato'", icon="🚨")
     else:
         right.error('Dette medlemmet finnes allerede i gruppen', icon="🚨")
 
