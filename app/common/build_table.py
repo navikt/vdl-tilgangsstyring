@@ -34,15 +34,36 @@ def build_cost_centre_table(session: Session) -> None:
     session.sql(sql).collect()
 
 def build_task_table(session: Session) -> None:
+
     sql = """
-        create or replace table policies.login_navn_oppgave as
-        select distinct
-            users.login_name as login_navn, 
-            relasjon.oppgave
-        from grupper
-        join gruppe_oppgave_relasjoner relasjon on grupper.gruppe = relasjon.gruppe
-        join gruppemedlemskap medlem on grupper.gruppe = medlem.gruppe
-        join users on lower(users.email) = lower(medlem.epost)
+        insert into policies.login_navn_oppgave (login_navn, oppgave, _opprettet_dato) (
+        with tilstand_n as ( 
+            select *, 
+                row_number() over (
+                    partition by login_navn, oppgave 
+                    order by _opprettet_dato desc, _slettet_dato desc nulls first 
+                ) as n 
+            from policies.login_navn_oppgave
+        ) 
+        select login_navn, oppgave, current_date from policies.tilganger 
+        where not exists (
+            select 1 
+            from tilstand_n 
+            where n=1 
+                and _slettet_dato is null 
+                and tilstand_n.login_navn = tilganger.login_navn 
+                and tilstand_n.oppgave = tilganger.oppgave
+        ))
     """
-    #session.sql(sql).collect()
+    session.sql(sql).collect()
+    sql = """
+        update policies.login_navn_oppgave set _slettet_dato = current_date 
+        where not exists (
+            select 1 
+            from policies.tilganger 
+            where login_navn_oppgave.login_navn = tilganger.login_navn 
+                and login_navn_oppgave.oppgave = tilganger.oppgave
+        ) and _slettet_dato is null
+    """
+    session.sql(sql).collect()
 
