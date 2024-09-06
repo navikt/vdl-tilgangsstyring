@@ -1,3 +1,4 @@
+from datetime import datetime
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 from common.utils import check_role
@@ -28,13 +29,10 @@ session = get_active_session()
 check_role(session)
 
 
-
 st.title("Gruppemedlemskap")
 left, right = st.columns([0.7, 0.3])
 
-
 right.markdown( " ### Legg til et nytt medlem")
-
 
 with right.form("Legg til medlem"):
     available_groups_statement = f"""
@@ -50,6 +48,7 @@ with right.form("Legg til medlem"):
     from_date_input = st.date_input("Fra dato")
     to_date_input = st.date_input("Til dato")
     submit_group = st.form_submit_button('Legg til gruppemedlemskap')
+
     
 if submit_group:
     from_date = f"{from_date_input.day}-{from_date_input.month}-{from_date_input.year}"
@@ -64,32 +63,35 @@ if submit_group:
     """
     df_exists = session.sql(exists_statement).to_pandas()
     if df_exists.empty:
-        if valid_email(email):
-            insert_statment=f"""
-                INSERT INTO gruppemedlemskap (
-                    gruppe,
-                    epost,
-                    fra_dato, 
-                    til_dato,
-                    _opprettet_av,
-                    _opprettet_dato, 
-                    _oppdatert_av,
-                    _oppdatert_dato
-                ) VALUES (
-                    upper('{group}'),
-                    initcap('{email}') ,
-                    to_date('{from_date}','DD-MM-YYYY'),
-                    to_date('{to_date}','DD-MM-YYYY'),
-                    '{st.experimental_user["email"]}',
-                    current_date, 
-                    '{st.experimental_user["email"]}',
-                    current_date 
-                )
-            """
-            session.sql(insert_statment).collect()
-            right.success('Suksess!', icon="✅")    
+        if from_date_input <= to_date_input:
+            if valid_email(email):
+                insert_statment=f"""
+                    INSERT INTO gruppemedlemskap (
+                        gruppe,
+                        epost,
+                        fra_dato, 
+                        til_dato,
+                        _opprettet_av,
+                        _opprettet_dato, 
+                        _oppdatert_av,
+                        _oppdatert_dato
+                    ) VALUES (
+                        upper('{group}'),
+                        initcap('{email}') ,
+                        to_date('{from_date}','DD-MM-YYYY'),
+                        to_date('{to_date}','DD-MM-YYYY'),
+                        '{st.experimental_user["email"]}',
+                        current_date, 
+                        '{st.experimental_user["email"]}',
+                        current_date 
+                    )
+                """
+                session.sql(insert_statment).collect()
+                right.success('Suksess!', icon="✅")    
+            else:
+                right.error("Ikke kødd, skriv inn en ordentlig e-post adresse", icon="🚨")
         else:
-            right.error("Ikke kødd, skriv inn en ordentlig e-post adresse", icon="🚨")
+            right.error("Feil: 'Fra dato' må være tidligere enn eller lik 'Til dato'. Vennligst sjekk datoene og prøv igjen.", icon="🚨")
     else:
         right.error('Dette medlemmet finnes allerede i gruppen', icon="🚨")
 
