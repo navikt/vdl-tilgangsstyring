@@ -9,8 +9,8 @@ with
 
     payload as (
         select distinct  
-            kostnadssted
-            , beskrivelse as kostnadssted_navn 
+            kostnadssted_forelder as kostnadssted
+            , forelder_beksrivelse as kostnadssted_navn 
         from source
         order by 1
     ),
