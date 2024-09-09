@@ -12,6 +12,11 @@ with
             kostnadssted_forelder as kostnadssted
             , forelder_beksrivelse as kostnadssted_navn 
         from source
+        union all 
+        select distinct  
+            kostnadssted as kostnadssted
+            , beskrivelse as kostnadssted_navn 
+        from source
         order by 1
     ),
 
