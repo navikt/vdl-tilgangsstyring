@@ -17,7 +17,8 @@ databases:
       shared: no
       owner: sysadmin
       schemas:
-        - oebs 
+        - oebs
+        - csv
 
 # Roles
 roles:
@@ -33,11 +34,16 @@ roles:
         schemas:
           read:
             - tilgangsstyring__raw.oebs
+            - tilgangsstyring__raw.csv
           write:
             - tilgangsstyring__raw.oebs
+            - tilgangsstyring__raw.csv
         tables:
           read: 
             - tilgangsstyring__raw.oebs.*
+            - tilgangsstyring__raw.csv.*
+          write:
+            - tilgangsstyring__raw.csv.*
       owner: useradmin
 
   - snowflake_users_reader:
@@ -96,15 +102,22 @@ roles:
         databases:
           read:
             - tilgangsstyring
+            - tilgangsstyring__raw
           write:
             - tilgangsstyring
         schemas:
           read:
             - tilgangsstyring.app
             - tilgangsstyring.policies 
+            - tilgangsstyring__raw.csv
+            - tilgangsstyring__raw.oebs
           write:
             - tilgangsstyring.app
             - tilgangsstyring.policies  
+        tables:
+          read: 
+            - tilgangsstyring__raw.csv.*
+            - tilgangsstyring__raw.oebs.*
       owns:
         tables:
           - tilgangsstyring.app.*

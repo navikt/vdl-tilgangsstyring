@@ -76,7 +76,14 @@ create table if not exists login_navn_kostnadssted(
     _slettet_dato date 
 )
 ;
-create or replace view tilganger as 
+create table if not exists login_navn_oppgave(
+    login_navn varchar(200),
+    oppgave varchar(200),
+    _opprettet_dato date, 
+    _slettet_dato date 
+)
+;
+create or replace view tilganger_kostnadssted as 
 with kostnadssteder as (
 select *
 from app.kostnadssted_hierarki
@@ -88,6 +95,19 @@ join app.gruppe_kostnadssted_relasjoner relasjon on grupper.gruppe = relasjon.gr
 join app.gruppemedlemskap medlem on grupper.gruppe = medlem.gruppe
 join app.users on lower(users.email) = lower(medlem.epost)
 join kostnadssteder on kostnadssteder.kostnadssted_forelder = relasjon.kostnadssted
+where medlem.fra_dato <= current_date and current_date <= medlem.til_dato
+and medlem._slettet_dato is null
+and relasjon._slettet_dato is null
+and grupper._slettet_dato is null
+;
+create or replace view tilganger_oppgave as 
+select 
+users.login_name as login_navn, 
+relasjon.oppgave
+from app.grupper
+join app.gruppe_oppgave_relasjoner relasjon on grupper.gruppe = relasjon.gruppe
+join app.gruppemedlemskap medlem on grupper.gruppe = medlem.gruppe
+join app.users on lower(users.email) = lower(medlem.epost)
 where medlem.fra_dato <= current_date and current_date <= medlem.til_dato
 and medlem._slettet_dato is null
 and relasjon._slettet_dato is null
