@@ -1,0 +1,11 @@
+
+sources:
+  - name: app
+    database: tilgangsstyring  
+    schema: app
+    tables:
+      - name: grupper
+      - name: gruppe_kostnadssted_relasjoner
+      - name: gruppemedlemskap
+      - name: users
+      - name: gruppe_oppgave_relasjoner

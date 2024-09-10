@@ -12,3 +12,14 @@ clean-targets: ["target", "dbt_packages"]
 macro-paths: ["macros"]
 
 require-dbt-version: ">=1.0.0"
+
+
+models:
+  +persist_docs:
+    relation: true
+    columns: true
+  vdl_regnskaps_data:
+    app:
+      +schema: app
+    policies:
+      +schema: policies
