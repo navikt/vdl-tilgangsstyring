@@ -19,7 +19,8 @@ users as (
 payload as (
     select 
         users.login_name as login_navn, 
-        relasjon.oppgave
+        relasjon.oppgave, 
+        grupper.gruppe_type    
     from grupper
     join relasjon on grupper.gruppe = relasjon.gruppe
     join medlem on grupper.gruppe = medlem.gruppe
