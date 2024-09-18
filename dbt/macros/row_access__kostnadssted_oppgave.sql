@@ -8,7 +8,7 @@
         end
     {% endset %}
 
-    {% do create_row_access_policy(
+    {% do vdl_macros.create_row_access_policy(
         name="row_access__kostnadssted_oppgave",
         input_params=["kostnadssted_kode string","oppgave_kode string"],
         body=body,

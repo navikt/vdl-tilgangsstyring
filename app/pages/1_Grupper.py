@@ -18,6 +18,7 @@ with right.form("Legg til gruppe"):
 
     group = st.text_input('Gruppenavn:')
     group_desc = st.text_input('Gruppebeskrivelse:')
+    group_type = st.selectbox('Gruppetype:',['DRIFT','YTELSE','BEGGE'])
     submit_group = st.form_submit_button('Lag ny gruppe')
 
 if submit_group:
@@ -30,6 +31,7 @@ if submit_group:
                 INSERT INTO grupper (
                     gruppe,
                     gruppe_beskrivelse,
+                    gruppe_type,
                     _opprettet_av,
                     _opprettet_dato, 
                     _oppdatert_av,
@@ -38,6 +40,7 @@ if submit_group:
                 VALUES (
                     upper('{group}'),
                     '{group_desc}',
+                    '{group_type}',
                     '{st.experimental_user["email"]}',
                     current_date, 
                     '{st.experimental_user["email"]}',
@@ -72,7 +75,7 @@ if delete_group:
 
 left.markdown( " ### Oversikt over grupper")
 
-gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse FROM grupper WHERE _slettet_dato IS NULL"""
+gruppe_view = f"""SELECT gruppe, gruppe_beskrivelse, gruppe_type FROM grupper WHERE _slettet_dato IS NULL"""
 df_groups = session.sql(gruppe_view).to_pandas()
 left.dataframe(df_groups, on_select="rerun", hide_index=True, use_container_width=True)
 

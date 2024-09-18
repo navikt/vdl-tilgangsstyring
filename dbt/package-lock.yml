@@ -1,0 +1,4 @@
+packages:
+  - git: https://github.com/navikt/vdl-macros.git
+    revision: 4ef0077abcab4ff947a2f67437ed8355b6870693
+sha1_hash: ecbaf43fee3e9c331d4bed2331e953db570ea467

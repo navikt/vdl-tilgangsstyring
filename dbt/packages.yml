@@ -1,0 +1,4 @@
+packages:
+  - git: https://github.com/navikt/vdl-macros.git
+    revision: main
+    warn-unpinned: false

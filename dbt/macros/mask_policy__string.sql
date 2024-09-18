@@ -1,4 +1,4 @@
-{% macro mask_string() %}
+{% macro mask_policy__string() %}
     {% set body %}
         case
             when current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER' then val
@@ -8,8 +8,8 @@
         end
     {% endset %}
 
-    {% do create_masking_policy(
-        name="mask_string",
+    {% do vdl_macros.create_masking_policy(
+        name="mask_policy__string",
         val_type="string",
         input_params=["kostnadssted_kode string"],
         body=body,

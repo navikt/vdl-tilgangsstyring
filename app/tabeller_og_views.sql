@@ -28,6 +28,7 @@ create or replace view users as
 create table if not exists grupper(
     gruppe varchar(200),
     gruppe_beskrivelse varchar(1000),
+    gruppe_type varchar(200),
     _opprettet_av varchar(40),
     _opprettet_dato date,
     _oppdatert_av varchar(40),
