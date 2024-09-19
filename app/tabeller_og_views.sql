@@ -73,6 +73,7 @@ use schema policies;
 create table if not exists login_navn_kostnadssted(
     login_navn varchar(200),
     kostnadssted varchar(200),
+    gruppe_type varchar(200),
     _opprettet_dato date, 
     _slettet_dato date 
 )
@@ -80,6 +81,7 @@ create table if not exists login_navn_kostnadssted(
 create table if not exists login_navn_oppgave(
     login_navn varchar(200),
     oppgave varchar(200),
+    gruppe_type varchar(200),
     _opprettet_dato date, 
     _slettet_dato date 
 )

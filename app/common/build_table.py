@@ -2,7 +2,7 @@ from snowflake.snowpark.session import Session
 
 def build_cost_centre_table(session: Session) -> None:
     sql = """
-        insert into policies.login_navn_kostnadssted (login_navn, kostnadssted, _opprettet_dato) (
+        insert into policies.login_navn_kostnadssted (login_navn, kostnadssted, gruppe_type, _opprettet_dato) (
         with tilstand_n as ( 
             select *, 
                 row_number() over (
@@ -11,7 +11,8 @@ def build_cost_centre_table(session: Session) -> None:
                 ) as n 
             from policies.login_navn_kostnadssted
         ) 
-        select login_navn, kostnadssted, current_date from policies.tilganger_kostnadssted tilganger
+        select login_navn, kostnadssted, gruppe_type, current_date 
+        from policies.tilganger_kostnadssted tilganger
         where not exists (
             select 1 
             from tilstand_n 
@@ -36,7 +37,7 @@ def build_cost_centre_table(session: Session) -> None:
 def build_task_table(session: Session) -> None:
 
     sql = """
-        insert into policies.login_navn_oppgave (login_navn, oppgave, _opprettet_dato) (
+        insert into policies.login_navn_oppgave (login_navn, oppgave, gruppe_type, _opprettet_dato) (
         with tilstand_n as ( 
             select *, 
                 row_number() over (
@@ -45,7 +46,8 @@ def build_task_table(session: Session) -> None:
                 ) as n 
             from policies.login_navn_oppgave
         ) 
-        select login_navn, oppgave, current_date from policies.tilganger_oppgave tilganger
+        select login_navn, oppgave, gruppe_type, current_date 
+        from policies.tilganger_oppgave tilganger
         where not exists (
             select 1 
             from tilstand_n 
