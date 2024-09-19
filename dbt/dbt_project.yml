@@ -18,7 +18,7 @@ models:
   +persist_docs:
     relation: true
     columns: true
-  vdl_regnskaps_data:
+  vdl_tilgangsstyring:
     app:
       +schema: app
     policies:
