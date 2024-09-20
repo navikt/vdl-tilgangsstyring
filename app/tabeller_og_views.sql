@@ -87,3 +87,10 @@ create table if not exists login_navn_oppgave(
 )
 ;
 
+create table if not exists bruker_tilganger(
+    login_navn varchar(200),
+    kostnadssted varchar(200),
+    oppgave varchar(200),
+    gruppe_type varchar(200)
+)
+;
