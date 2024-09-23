@@ -9,5 +9,8 @@ join {policy_db}.{policy_schema}.bruker_tilganger on
         or (final.er_postert_pa_ytelse_konto=FALSE and bruker_tilganger.gruppe_type = 'DRIFT')
         or (bruker_tilganger.gruppe_type = 'BEGGE')
     )
-) or (current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER')
+) or (
+    current_role() like '%_TRANSFORMER' 
+    or current_role() like '%_LOADER'
+)
 {% endmacro %}

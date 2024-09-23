@@ -17,7 +17,7 @@ with
           kostnadssted
         , beskrivelse
         , kostnadssted_forelder
-        , forelder_beksrivelse
+        , forelder_beskrivelse
         , n 
     ) as (
         select *
@@ -28,7 +28,7 @@ with
               derived.kostnadssted
             , derived.beskrivelse
             , recursive.kostnadssted_forelder
-            , recursive.forelder_beksrivelse
+            , recursive.forelder_beskrivelse
             , recursive.n + 1 
         from derived 
         join recursive on 
@@ -39,14 +39,14 @@ with
               kostnadssted
             , beskrivelse
             , kostnadssted_forelder
-            , forelder_beksrivelse
+            , forelder_beskrivelse
         from recursive
         union all 
         select distinct
               kostnadssted_forelder
-            , forelder_beksrivelse 
+            , forelder_beskrivelse 
             , kostnadssted_forelder
-            , forelder_beksrivelse 
+            , forelder_beskrivelse 
         from recursive
     ), 
     final as (

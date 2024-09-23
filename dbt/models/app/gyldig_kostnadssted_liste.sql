@@ -10,7 +10,7 @@ with
     payload as (
         select distinct  
             kostnadssted_forelder as kostnadssted
-            , forelder_beksrivelse as kostnadssted_navn 
+            , forelder_beskrivelse as kostnadssted_navn 
         from source
         union all 
         select distinct  

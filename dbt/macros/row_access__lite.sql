@@ -12,7 +12,7 @@
                 or (er_ytelse=FALSE and gruppe_type = 'DRIFT')
                 or (gruppe_type = 'BEGGE')
             )
-        ) or current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER'      
+        ) or current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER'
     {% endset %}
 
     {% do vdl_macros.create_row_access_policy(
