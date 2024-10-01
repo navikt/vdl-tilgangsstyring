@@ -50,7 +50,12 @@ with
         from recursive
     ), 
     final as (
-        select * from kostnadssteder
+        select 
+            kostnadssted_forelder as gruppe
+            , forelder_beskrivelse as gruppe_beskrivelse
+            , kostnadssted 
+            , beskrivelse as kostnadssted_beskrivelse
+        from kostnadssteder
     )
 select * 
 from final
