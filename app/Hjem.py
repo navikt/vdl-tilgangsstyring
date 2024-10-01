@@ -193,7 +193,7 @@ if update_access:
             select 1 from tilgangsstyring.policies.bruker_tilganger trgt 
             where src.login_navn=trgt.login_navn 
             and src.kostnadssted_gruppe=trgt.kostnadssted_gruppe
-            and src.kostnadssted=trgt.kostnadssted
+            and coalesce(src.kostnadssted,'¿nothing¿')=coalesce(trgt.kostnadssted,'¿nothing¿')
             and src.oppgave_gruppe=trgt.oppgave_gruppe
             and coalesce(src.oppgave,'¿nothing¿')=coalesce(trgt.oppgave,'¿nothing¿')
             and src.artskonto_gruppe=trgt.artskonto_gruppe
@@ -213,7 +213,7 @@ if update_access:
             select 1 from tilgangsstyring.policies.beregnet_bruker_tilganger src
             where src.login_navn=trgt.login_navn 
             and src.kostnadssted_gruppe=trgt.kostnadssted_gruppe
-            and src.kostnadssted=trgt.kostnadssted
+            and coalesce(src.kostnadssted,'¿nothing¿')=coalesce(trgt.kostnadssted,'¿nothing¿')
             and src.oppgave_gruppe=trgt.oppgave_gruppe
             and coalesce(src.oppgave,'¿nothing¿')=coalesce(trgt.oppgave,'¿nothing¿')
             and src.artskonto_gruppe=trgt.artskonto_gruppe
