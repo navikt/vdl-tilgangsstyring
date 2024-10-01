@@ -10,10 +10,10 @@ with
     artskonti as (select * from {{ source('app', 'artskonto_grupper') }}),
     brukere as (select * from {{ source('app','users')}}),
     payload as (
-        select 
+        select distinct
             brukere.login_name as login_navn,
             kostnadssteder.gruppe as kostnadssted_gruppe,
-            kostnadssteder.kostnadssted,
+            case when kostnadssteder.gruppe = 'T' then null else kostnadssteder.kostnadssted end as kostnadssted,
             oppgaver.gruppe as oppgave_gruppe,
             oppgaver.oppgave,
             artskonti.gruppe as artskonto_gruppe,
