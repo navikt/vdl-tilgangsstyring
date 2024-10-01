@@ -12,7 +12,6 @@ select * from tlost__oebs_prod.apps.xxrtv_gl_hierarki_v;
 create or replace view xxrtv_gl_segment_v as 
 select * from tlost__oebs_prod.apps.xxrtv_gl_segment_v;
 
-
 use role securityadmin; 
 grant create streamlit on schema tilgangsstyring.app to role tilgangsstyring_developer;
 
@@ -25,72 +24,40 @@ create or replace view users as
     from snowflake_users.account_usage.users
 ;
 
-create table if not exists grupper(
-    gruppe varchar(200),
-    gruppe_beskrivelse varchar(1000),
-    gruppe_type varchar(200),
-    _opprettet_av varchar(40),
-    _opprettet_dato date,
-    _oppdatert_av varchar(40),
-    _oppdatert_dato date,
-    _slettet_dato date
-);
-
-create table if not exists gruppe_kostnadssted_relasjoner(
-    gruppe varchar(200),
-    kostnadssted varchar(200),
-    _opprettet_av varchar(40),
-    _opprettet_dato date,
-    _oppdatert_av varchar(40),
-    _oppdatert_dato date,
-    _slettet_dato date
-);
-
-create table if not exists gruppe_oppgave_relasjoner(
-    gruppe varchar(200),
-    oppgave varchar(200),
-    _opprettet_av varchar(40),
-    _opprettet_dato date,
-    _oppdatert_av varchar(40),
-    _oppdatert_dato date,
-    _slettet_dato date
-);
-
-create table if not exists gruppemedlemskap(
-    gruppe varchar(200),
+create table if not exists bruker_tilganger(
     epost varchar(200),
+    kostnadssted_gruppe varchar(200),
+    oppgave_gruppe varchar(200),
+    artskonto_gruppe varchar(200),
+    rolle varchar(200),
+    begrunnelse varchar(2000), 
     fra_dato date,
     til_dato date,
-    _opprettet_av varchar(40),
-    _opprettet_dato date,
-    _oppdatert_av varchar(40),
-    _oppdatert_dato date,
-    _slettet_dato date
-);
+    tilgang_gitt_av varchar(200),
+    tilgang_gitt_fra timestamp,
+    _slettet_dato timestamp
+)
+;
+use warehouse tilgangsstyring_app;
+
+create table if not exists oppgave_grupper as
+select cast('TOTAL' as varchar(200)) as gruppe, cast(NULL as varchar(200)) as oppgave
+;
+
+create table if not exists artskonto_grupper as
+select cast('TOTAL' as varchar(200)) as gruppe, cast(NULL as varchar(200)) as artskonto
+;
 
 use schema policies;
 
-create table if not exists login_navn_kostnadssted(
-    login_navn varchar(200),
-    kostnadssted varchar(200),
-    gruppe_type varchar(200),
-    _opprettet_dato date, 
-    _slettet_dato date 
-)
-;
-create table if not exists login_navn_oppgave(
-    login_navn varchar(200),
-    oppgave varchar(200),
-    gruppe_type varchar(200),
-    _opprettet_dato date, 
-    _slettet_dato date 
-)
-;
-
 create table if not exists bruker_tilganger(
     login_navn varchar(200),
+    kostnadssted_gruppe varchar(200),
     kostnadssted varchar(200),
+    oppgave_gruppe varchar(200),
     oppgave varchar(200),
-    gruppe_type varchar(200)
+    artskonto_gruppe varchar(200),
+    artskonto varchar(200),
+    rolle varchar(200)
 )
 ;
