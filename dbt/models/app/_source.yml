@@ -1,7 +1,7 @@
 
 sources:
   - name: oebs
-    database: tilgangsstyring__raw  
+    database: tilgangsstyring
     schema: oebs  
     tables:
       - name: xxrtv_gl_segment_v

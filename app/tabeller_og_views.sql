@@ -5,7 +5,6 @@ create or replace view snowflake_users.account_usage.users as
     where not has_password;
 
 use role sysadmin;
-use database tilgangsstyring__raw;
 use schema oebs;
 create or replace view xxrtv_gl_hierarki_v  as 
 select * from tlost__oebs_prod.apps.xxrtv_gl_hierarki_v;
@@ -38,7 +37,9 @@ create table if not exists bruker_tilganger(
     _slettet_dato timestamp
 )
 ;
-use warehouse tilgangsstyring_app;
+
+use warehouse tilgangsstyring_app
+;
 
 create table if not exists oppgave_grupper as
 select cast('TOTAL' as varchar(200)) as gruppe, cast(NULL as varchar(200)) as oppgave
@@ -46,18 +47,4 @@ select cast('TOTAL' as varchar(200)) as gruppe, cast(NULL as varchar(200)) as op
 
 create table if not exists artskonto_grupper as
 select cast('TOTAL' as varchar(200)) as gruppe, cast(NULL as varchar(200)) as artskonto
-;
-
-use schema policies;
-
-create table if not exists bruker_tilganger(
-    login_navn varchar(200),
-    kostnadssted_gruppe varchar(200),
-    kostnadssted varchar(200),
-    oppgave_gruppe varchar(200),
-    oppgave varchar(200),
-    artskonto_gruppe varchar(200),
-    artskonto varchar(200),
-    rolle varchar(200)
-)
 ;

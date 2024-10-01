@@ -1,4 +1,3 @@
-version: "1.0"
 
 # Databases
 databases:
@@ -8,44 +7,17 @@ databases:
       schemas:
         - app
         - policies 
+        - oebs
+        - csv
   - snowflake_users:
       shared: no
       owner: accountadmin
       schemas:
         - account_usage
-  - tilgangsstyring__raw:
-      shared: no
-      owner: sysadmin
-      schemas:
-        - oebs
-        - csv
+        
 
 # Roles
 roles:
-  - tilgangsstyring_loader:
-      warehouses:
-        - tilgangsstyring_app
-      privileges:
-        databases:
-          read:
-            - tilgangsstyring__raw
-          write:
-            - tilgangsstyring__raw
-        schemas:
-          read:
-            - tilgangsstyring__raw.oebs
-            - tilgangsstyring__raw.csv
-          write:
-            - tilgangsstyring__raw.oebs
-            - tilgangsstyring__raw.csv
-        tables:
-          read: 
-            - tilgangsstyring__raw.oebs.*
-            - tilgangsstyring__raw.csv.*
-          write:
-            - tilgangsstyring__raw.csv.*
-      owner: useradmin
-
   - snowflake_users_reader:
       warehouses:
         - tilgangsstyring_app
@@ -68,7 +40,6 @@ roles:
   - tilgangsstyring_user:
       member_of:
         - snowflake_users_reader
-        - tilgangsstyring_loader
       warehouses:
         - tilgangsstyring_app
       privileges:
@@ -102,27 +73,38 @@ roles:
         databases:
           read:
             - tilgangsstyring
-            - tilgangsstyring__raw
           write:
             - tilgangsstyring
         schemas:
           read:
             - tilgangsstyring.app
             - tilgangsstyring.policies 
-            - tilgangsstyring__raw.csv
-            - tilgangsstyring__raw.oebs
+            - tilgangsstyring.csv
+            - tilgangsstyring.oebs
           write:
             - tilgangsstyring.app
+            - tilgangsstyring.csv
             - tilgangsstyring.policies  
+            - tilgangsstyring.oebs
         tables:
           read: 
-            - tilgangsstyring__raw.csv.*
-            - tilgangsstyring__raw.oebs.*
+            - tilgangsstyring.app.*
+            - tilgangsstyring.csv.*
+            - tilgangsstyring.policies.*
+            - tilgangsstyring.oebs.*
+          write: 
+            - tilgangsstyring.app.*
+            - tilgangsstyring.csv.*
+            - tilgangsstyring.policies.*
+            - tilgangsstyring.oebs.*
       owns:
         tables:
           - tilgangsstyring.app.*
+          - tilgangsstyring.csv.*
           - tilgangsstyring.policies.*
+          - tilgangsstyring.oebs.*
       owner: useradmin    
+  
   - tilgangsstyring_reporter:
       privileges:
         databases:
