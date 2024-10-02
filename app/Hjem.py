@@ -8,27 +8,21 @@ st.set_page_config(layout="wide", page_title="Kostnadsstedsrelasjoner")
 
 # Get the current credentials
 session = get_active_session()
-required_roles = (
-    "TILGANGSSTYRING_USER",
-    "TILGANGSSTYRING_DEVELOPER",
-    "TILGANGSSTYRING_REPORTER",
+
+st.title("Tilgangsstyring")
+
+
+st.markdown("### Gi deg selv tilgang")
+st.markdown(
+    """
+    Her kan du gi deg selv tilgang til maskert data. Du må oppgi en __begrunnelse__ 
+    for at du skal ha tilgang til sette av kostnadssteder
+    """
 )
-current_role = session.get_current_role().strip('"')
-if current_role not in required_roles:
-    st.error(
-        f"Your role {current_role} do not have the necessary permissions to use this app. Required role is TILGANGSSTYRING_USER, please switch roles."
-    )
-    st.stop()
-st.success("Successfully authenticated with the correct role.")
-
-
-st.title("Tilganger")
-
-
-st.markdown("### Gi tilgang")
 
 
 with st.form("Opprett tilgang"):
+    # TODO: styr basert på gruppe beskrivelse.
     cost_centres_query = f"""
             SELECT DISTINCT gruppe FROM kostnadssted_grupper ORDER BY 1
         """
@@ -96,8 +90,11 @@ if submit:
                 current_timestamp
             )
         """
-        session.sql(insert_statment).collect()
-        st.success("Suksess!", icon="✅")
+        if reason.__len__() > 0:
+            session.sql(insert_statment).collect()
+            st.success("Suksess!", icon="✅")
+        else:
+            st.error("Du må fylle ut begrunnelse", icon="🚨")
     else:
         st.error("Tilgangen existerer eksisterer allerede", icon="🚨")
 
