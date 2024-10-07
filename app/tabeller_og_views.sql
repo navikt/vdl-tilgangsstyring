@@ -4,6 +4,9 @@ create or replace view snowflake_users.account_usage.users as
     from snowflake.account_usage.users
     where not has_password;
 
+
+grant apply masking policy on account to role tilgangsstyring_admin;
+
 use role sysadmin;
 use schema oebs;
 create or replace view xxrtv_gl_hierarki_v  as 

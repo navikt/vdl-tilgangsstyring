@@ -13,9 +13,7 @@ databases:
       shared: no
       owner: accountadmin
       schemas:
-        - account_usage
-        
-
+        - account_usage       
 # Roles
 roles:
   - snowflake_users_reader:
@@ -36,37 +34,9 @@ roles:
           read: 
             - snowflake_users.account_usage.*
       owner: useradmin
-
-  - tilgangsstyring_user:
-      member_of:
-        - snowflake_users_reader
-      warehouses:
-        - tilgangsstyring_app
-      privileges:
-        databases:
-          read:
-            - tilgangsstyring
-          write:
-            - tilgangsstyring
-        schemas:
-          read:
-            - tilgangsstyring.app
-            - tilgangsstyring.policies 
-          write:
-            - tilgangsstyring.app
-            - tilgangsstyring.policies 
-        tables:
-          read:
-            - tilgangsstyring.app.*
-            - tilgangsstyring.policies.*
-          write:
-            - tilgangsstyring.app.*
-            - tilgangsstyring.policies.*
-      owner: useradmin
-
   - tilgangsstyring_developer:
-      member_of:
-        - tilgangsstyring_user
+      member_of: 
+        - snowflake_users_reader
       warehouses:
         - tilgangsstyring_app
       privileges:
@@ -103,8 +73,7 @@ roles:
           - tilgangsstyring.csv.*
           - tilgangsstyring.policies.*
           - tilgangsstyring.oebs.*
-      owner: useradmin    
-  
+      owner: useradmin     
   - tilgangsstyring_reporter:
       privileges:
         databases:
@@ -119,8 +88,20 @@ roles:
           read:
             - tilgangsstyring.policies.*
       owner: useradmin
-
-
+  - tilgangsstyring_admin:
+      privileges:
+        databases:
+          read:
+            - tilgangsstyring
+          write:
+            - tilgangsstyring
+        schemas:
+          read:
+            - tilgangsstyring.policies 
+        tables:
+          read:
+            - tilgangsstyring.policies.*
+      owner: accountadmin
 warehouses:
   - tilgangsstyring_app:
       size: x-small
