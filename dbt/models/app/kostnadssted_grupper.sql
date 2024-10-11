@@ -51,7 +51,7 @@ with
     ), 
     final as (
         select 
-            kostnadssted_forelder as gruppe
+            case when kostnadssted_forelder='T' then 'TOTAL' else kostnadssted_forelder end as gruppe
             , forelder_beskrivelse as gruppe_beskrivelse
             , kostnadssted 
             , beskrivelse as kostnadssted_beskrivelse

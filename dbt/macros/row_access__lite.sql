@@ -1,12 +1,12 @@
 {% macro row_access__lite(policy_db, policy_schema) %}
     {% set body %}
-        exists (
+         exists (
             select 1 
-            from tilgangsstyring.policies.bruker_tilganger 
+            from tilgangsstyring.policies.bruker_tilganger__filtrering 
             where login_navn = current_user() 
-            and (kostnadssted = kostnadssted_kode or kostnadssted_gruppe = 'T')
+            and (kostnadssted = kostnadssted_kode or kostnadssted_gruppe = 'TOTAL')
             and (oppgave = oppgave_kode or oppgave_gruppe = 'TOTAL')
-            and (artskonto = artskonto_kode or artskonto_kode = 'TOTAL')
+            and (artskonto = artskonto_kode or artskonto_gruppe = 'TOTAL')
             ) or current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER'
     {% endset %}
 

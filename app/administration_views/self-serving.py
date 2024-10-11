@@ -42,15 +42,15 @@ with st.form("Opprett tilgang"):
     account = st.selectbox(
         "Angi Artskonto Gruppe", session.sql(accounts_query).to_pandas()
     )
-    roles = st.selectbox("Angi Rolle", ["DETALJE TILGANG", "RAD TILGANG"])
+    roles = st.selectbox("Angi Rolle", ["DETALJER", "IKKE DETALJER"])
     from_date_input = date.today()
-    from_date = f"{from_date_input.day}-{from_date_input.month}-{from_date_input.year}"
-    to_date_input = date.today() + timedelta(days=30)
-    to_date = f"{to_date_input.day}-{to_date_input.month}-{to_date_input.year}"
+    to_date_input = timedelta(days=30)
     reason = st.text_input("Tilgangbegrunnelse:")
     submit = st.form_submit_button("Gi tilgang")
 
 if submit:
+    from_date = f"{from_date_input.day}-{from_date_input.month}-{from_date_input.year}"
+    to_date = f"{to_date_input.day}-{to_date_input.month}-{to_date_input.year}"
     already_exists = f"""
         SELECT 
             epost,
@@ -91,6 +91,7 @@ if submit:
                 '{st.experimental_user["email"]}',
                 current_timestamp
         """
+        st.markdown(insert_statment)
         if reason.__len__() > 0:
             session.sql(insert_statment).collect()
             st.success("Suksess!", icon="✅")

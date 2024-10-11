@@ -13,12 +13,12 @@ with
         select distinct
             brukere.login_name as login_navn,
             kostnadssteder.gruppe as kostnadssted_gruppe,
-            case when kostnadssteder.gruppe = 'T' then null else kostnadssteder.kostnadssted end as kostnadssted,
+            case when kostnadssteder.gruppe = 'TOTAL' then null else kostnadssteder.kostnadssted end as kostnadssted,
             oppgaver.gruppe as oppgave_gruppe,
             oppgaver.oppgave,
             artskonti.gruppe as artskonto_gruppe,
             artskonti.artskonto,
-            bruker_tilganger.rolle
+            bruker_tilganger.rolle='DETALJE TILGANG' as er_detalj_tilgang
         from bruker_tilganger 
         join kostnadssteder on kostnadssteder.gruppe = bruker_tilganger.kostnadssted_gruppe
         join oppgaver on oppgaver.gruppe = bruker_tilganger.oppgave_gruppe
