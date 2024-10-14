@@ -10,12 +10,11 @@
                     where login_navn = current_user
                 ) = 1 
                 or contains(
-                    kostnadssted_kode, 
                     (
                         select max(kostnadssteder) 
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    )
+                    ), kostnadssted_kode
                 )
             ) and (
                 (
@@ -24,12 +23,11 @@
                     where login_navn = current_user
                 ) = 1 
                 or contains(
-                    oppgave_kode, 
                     (
                         select max(oppgaver) 
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    )
+                    ), oppgave_kode
                 )
             ) and (
                 (
@@ -38,12 +36,11 @@
                     where login_navn = current_user
                 ) = 1 
                 or contains(
-                    artskonto_kode, 
                     (
                         select max(artskonti) 
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    )
+                    ), artskonto_kode
                 )
             ) then val
             else '* MASKERT *'
