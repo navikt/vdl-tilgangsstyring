@@ -35,26 +35,20 @@ with
             derived.kostnadssted_forelder =  recursive.kostnadssted
         where recursive.kostnadssted_forelder is not null
     ), kostnadssteder as (
-        select 
-              kostnadssted
-            , beskrivelse
-            , kostnadssted_forelder
-            , forelder_beskrivelse
-        from recursive
-        union all 
-        select distinct
-              kostnadssted_forelder
-            , forelder_beskrivelse 
-            , kostnadssted_forelder
-            , forelder_beskrivelse 
-        from recursive
+    select 
+        kostnadssted_forelder,
+        forelder_beskrivelse,
+        ''''||listagg(kostnadssted,''',''')||'''' as kostnadssted_liste,
+        max(n) as n 
+    from recursive 
+    group by all
     ), 
     final as (
         select 
             case when kostnadssted_forelder='T' then 'TOTAL' else kostnadssted_forelder end as gruppe
             , forelder_beskrivelse as gruppe_beskrivelse
-            , kostnadssted 
-            , beskrivelse as kostnadssted_beskrivelse
+            , case when kostnadssted_forelder='T' then null else kostnadssted_liste end as kostnadssted 
+            , n 
         from kostnadssteder
     )
 select * 
