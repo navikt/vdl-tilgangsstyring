@@ -38,16 +38,16 @@ with
     select 
         kostnadssted_forelder,
         forelder_beskrivelse,
-        ''''||listagg(kostnadssted,''',''')||'''' as kostnadssted_liste,
+        kostnadssted,
         max(n) as n 
     from recursive 
     group by all
     ), 
     final as (
-        select 
+        select distinct 
             case when kostnadssted_forelder='T' then 'TOTAL' else kostnadssted_forelder end as gruppe
             , forelder_beskrivelse as gruppe_beskrivelse
-            , case when kostnadssted_forelder='T' then null else kostnadssted_liste end as kostnadssted 
+            , case when kostnadssted_forelder='T' then null else kostnadssted end as kostnadssted 
             , n 
         from kostnadssteder
     )

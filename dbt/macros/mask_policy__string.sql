@@ -9,12 +9,12 @@
                     from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
                 ) = 1 
-                or contains(
+                or array_contains(kostnadssted_kode::variant,
                     (
-                        select max(kostnadssteder) 
+                        select kostnadssteder
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    ), kostnadssted_kode
+                    )
                 )
             ) and (
                 (
@@ -22,12 +22,12 @@
                     from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
                 ) = 1 
-                or contains(
+                or array_contains(oppgave_kode::variant,
                     (
-                        select max(oppgaver) 
+                        select oppgaver
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    ), oppgave_kode
+                    )
                 )
             ) and (
                 (
@@ -35,12 +35,12 @@
                     from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
                 ) = 1 
-                or contains(
+                or array_contains(artskonto_kode::variant,
                     (
-                        select max(artskonti) 
+                        select artskonti
                         from tilgangsstyring.policies.bruker_tilganger__maskering 
                         where login_navn = current_user
-                    ), artskonto_kode
+                    )
                 )
             ) then val
             else '* MASKERT *'

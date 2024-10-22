@@ -17,19 +17,19 @@ with
             end as har_all_kostnadssteder,
             case when oppgave_gruppe = 'TOTAL' then 1 else 0 end as har_all_oppgaver,
             case when artskonto_gruppe = 'TOTAL' then 1 else 0 end as har_all_artskonti,
-            rolle = 'DETALJE TILGANG' as er_detalj_tilgang
+            rolle = 'DETALJE TILGANG' as er_detalj_tilganger
         from bruker_tilganger
     ),
     payload as (
         select distinct
             brukere.login_name as login_navn,
-            er_detalj_tilgang,
+            er_detalj_tilganger,
             max(har_all_kostnadssteder) har_all_kostnadssteder,
             max(har_all_oppgaver) har_all_oppgaver,
             max(har_all_artskonti) har_all_artskonti,
-            listagg(kostnadssted, ',') as kostnadssteder,
-            listagg(artskonto, ',') as artskonti,
-            listagg(oppgave, ',') as oppgaver
+            arrayagg(distinct kostnadssted) as kostnadssteder,
+            arrayagg(distinct artskonto) as artskonti,
+            arrayagg(distinct oppgave) as oppgaver
         from bruker_tilganger_type
         join
             kostnadssteder

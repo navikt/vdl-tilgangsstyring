@@ -1,44 +1,42 @@
 {% macro row_access__lite(policy_db, policy_schema) %}
     {% set body %}
-         (
+        (
             (
+                select max(har_all_kostnadssteder) 
+                from tilgangsstyring.policies.bruker_tilganger__maskering 
+                where login_navn = current_user
+            ) = 1 
+            or array_contains(kostnadssted_kode::variant,
                 (
-                    select max(har_all_kostnadssteder) 
-                    from tilgangsstyring.policies.bruker_tilganger__filtrering 
+                    select kostnadssteder
+                    from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
-                ) = 1 
-                or contains(
-                    (
-                        select max(kostnadssteder) 
-                        from tilgangsstyring.policies.bruker_tilganger__filtrering 
-                        where login_navn = current_user
-                    ), kostnadssted_kode
                 )
-            ) and (
+            )
+        ) and (
+            (
+                select max(har_all_oppgaver) 
+                from tilgangsstyring.policies.bruker_tilganger__maskering 
+                where login_navn = current_user
+            ) = 1 
+            or array_contains(oppgave_kode::variant,
                 (
-                    select max(har_all_oppgaver) 
-                    from tilgangsstyring.policies.bruker_tilganger__filtrering 
+                    select oppgaver
+                    from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
-                ) = 1 
-                or contains(
-                    (
-                        select max(oppgaver) 
-                        from tilgangsstyring.policies.bruker_tilganger__filtrering 
-                        where login_navn = current_user
-                    ), oppgave_kode
                 )
-            ) and (
+            )
+        ) and (
+            (
+                select max(har_all_artskonti) 
+                from tilgangsstyring.policies.bruker_tilganger__maskering 
+                where login_navn = current_user
+            ) = 1 
+            or array_contains(artskonto_kode::variant,
                 (
-                    select max(har_all_artskonti) 
-                    from tilgangsstyring.policies.bruker_tilganger__filtrering 
+                    select artskonti
+                    from tilgangsstyring.policies.bruker_tilganger__maskering 
                     where login_navn = current_user
-                ) = 1 
-                or contains(
-                    (
-                        select max(artskonti) 
-                        from tilgangsstyring.policies.bruker_tilganger__filtrering 
-                        where login_navn = current_user
-                    ), artskonto_kode
                 )
             )
         ) or current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER'
