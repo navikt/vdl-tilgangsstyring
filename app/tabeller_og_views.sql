@@ -14,7 +14,14 @@ create or replace view xxrtv_gl_hierarki_v  as
 select * from tlost__oebs_prod.apps.xxrtv_gl_hierarki_v;
 create or replace view xxrtv_gl_segment_v as 
 select * from tlost__oebs_prod.apps.xxrtv_gl_segment_v;
-
+create or replace view kostandssteder_kunde as 
+select
+ar.cust_account_id as kunde_id, 
+bilag.segment2 as kostnadssted
+from tlost__oebs_prod.apps.xxrtv_ar_transaksjons_v ar
+join tlost__oebs_prod.apps.xxrtv_gl_bilag_v bilag on bilag.gl_sl_link_id = ar.gl_sl_link_id 
+and bilag.gl_sl_link_table = ar.gl_sl_link_table
+;
 use role securityadmin; 
 grant create streamlit on schema tilgangsstyring.app to role tilgangsstyring_developer;
 
@@ -26,37 +33,6 @@ create or replace view users as
     select * 
     from snowflake_users.account_usage.users
 ;
-
-create table if not exists bruker_tilganger__maskering(
-    epost varchar(200),
-    kostnadssted_gruppe varchar(200),
-    oppgave_gruppe varchar(200),
-    artskonto_gruppe varchar(200),
-    er_detalj_tilgang boolean,
-    begrunnelse varchar(2000), 
-    fra_dato date,
-    til_dato date,
-    tilgang_gitt_av varchar(200),
-    tilgang_gitt_fra timestamp,
-    _slettet_dato timestamp
-)
-;
-
-create table if not exists bruker_tilganger__filtreringcd (
-    epost varchar(200),
-    kostnadssted_gruppe varchar(200),
-    oppgave_gruppe varchar(200),
-    artskonto_gruppe varchar(200),
-    er_detalj_tilgang boolean,
-    begrunnelse varchar(2000), 
-    fra_dato date,
-    til_dato date,
-    tilgang_gitt_av varchar(200),
-    tilgang_gitt_fra timestamp,
-    _slettet_dato timestamp
-)
-;
-
 
 use warehouse tilgangsstyring_app
 ;
