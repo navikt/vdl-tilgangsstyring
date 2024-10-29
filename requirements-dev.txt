@@ -1,4 +1,4 @@
-snowbird @ git+https://github.com/navikt/snowbird
+snowbird @ git+https://github.com/navikt/snowbird@v0.1.0
 streamlit 
 snowflake-connector-python 
 pandas
