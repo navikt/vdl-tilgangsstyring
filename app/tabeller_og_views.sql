@@ -11,9 +11,9 @@ grant apply row access policy on account to role tilgangsstyring_admin;
 use role sysadmin;
 use schema oebs;
 create or replace view xxrtv_gl_hierarki_v  as 
-select * from tlost__oebs_prod.apps.xxrtv_gl_hierarki_v;
+select * from regnskap_raw.oebs.xxrtv_gl_hierarki_v__transient;
 create or replace view xxrtv_gl_segment_v as 
-select * from tlost__oebs_prod.apps.xxrtv_gl_segment_v;
+select * from regnskap_raw.oebs.xxrtv_fist_gl_segment_v__transient;
 create or replace view kostandssteder_kunde as 
 select
 ar.cust_account_id as kunde_id, 
