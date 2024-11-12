@@ -3,3 +3,5 @@
 _test.py
 dbt_packages/
 logs/
+logs/dbt.log
+csv/
