@@ -1,5 +1,5 @@
 vdl_tilgangsstyring_profile:
-  target: "{{ env_var('DBT_TARGET', 'dev_sso') }}"
+  target: "{{ env_var('DBT_TARGET', 'transformer') }}"
   outputs:
     dev_sso:
       type: snowflake
@@ -8,9 +8,21 @@ vdl_tilgangsstyring_profile:
       role: "tilgangsstyring_developer"
       # SSO config
       authenticator: externalbrowser
-      database: "tilgangsstyring"
+      database: "{{ env_var('TILGANGSSTYRING_DB') }}"
       warehouse: "tilgangsstyring_app"
       schema: "app"
       threads: 8
       client_session_keep_alive: False
       reuse_connections: True
+    transformer:
+      type: "snowflake"
+      account: "wx23413.europe-west4.gcp"
+      # User/password auth
+      user: "{{ env_var('DBT_USR') }}"
+      password: "{{ env_var('DBT_PWD') }}"
+      role: "tilgangsstyring_developer"
+      database: "{{ env_var('TILGANGSSTYRING_DB') }}"
+      warehouse: "tilgangsstyring_app"
+      schema: "app"
+      threads: 8
+      client_session_keep_alive: False

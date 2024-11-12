@@ -14,4 +14,10 @@ if [[ ! -z "$dependency_diff" ]]; then
   make install
 fi
 
+#Snowbird
+. ./infrastructure/auth.sh
+
+#DBT
+. ./dbt/auth.sh
+
 code .
