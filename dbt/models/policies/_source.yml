@@ -4,9 +4,7 @@ sources:
     database: tilgangsstyring  
     schema: app
     tables:
-      - name: bruker_tilganger
-      - name: oppgave_grupper
-      - name: artskonto_grupper
+      - name: bruker_tilganger_kostnadssted
       - name: kostnadssted_grupper
       - name: users
       
