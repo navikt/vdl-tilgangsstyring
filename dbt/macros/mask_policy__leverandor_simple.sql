@@ -1,4 +1,4 @@
-{% macro mask_policy__leverandor() %}
+{% macro mask_policy__leverandor_simple() %}
     {% set body %}
         case
             when current_role() like '%_TRANSFORMER' or current_role() like '%_LOADER' then val
@@ -11,7 +11,7 @@
     {% endset %}
 
     {% do vdl_macros.create_masking_policy(
-        name="mask_policy__leverandor",
+        name="mask_policy__leverandor_simple",
         val_type="string",
         input_params=["er_organsiasjon boolean"],
         body=body,
