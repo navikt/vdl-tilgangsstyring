@@ -21,8 +21,8 @@ create or replace view kostandssteder_kunde as
 select
 ar.cust_account_id as kunde_id, 
 bilag.segment2 as kostnadssted
-from tlost__oebs_prod.apps.xxrtv_ar_transaksjons_v ar
-join tlost__oebs_prod.apps.xxrtv_gl_bilag_v bilag on bilag.gl_sl_link_id = ar.gl_sl_link_id 
+from tlost__oebs_prod.xxkoko.xxrtv_ar_transaksjons_v ar
+join tlost__oebs_prod.xxkoko.xxrtv_gl_bilag_v bilag on bilag.gl_sl_link_id = ar.gl_sl_link_id 
 and bilag.gl_sl_link_table = ar.gl_sl_link_table
 ;
 
