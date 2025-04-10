@@ -12,17 +12,17 @@ use role sysadmin;
 use schema oebs;
 
 create or replace view xxrtv_gl_hierarki_v  as 
-select * from regnskap_raw.oebs.xxrtv_gl_hierarki_v__transient;
+select * from tlost__oebs_prod.xxoko.xxrtv_gl_hierarki_v;
 
 create or replace view xxrtv_gl_segment_v as 
-select * from regnskap_raw.oebs.xxrtv_fist_gl_segment_v__transient;
+select * from tlost__oebs_prod.xxoko.xxrtv_fist_gl_segment_v;
 
 create or replace view kostandssteder_kunde as 
 select
 ar.cust_account_id as kunde_id, 
 bilag.segment2 as kostnadssted
-from tlost__oebs_prod.xxkoko.xxrtv_ar_transaksjons_v ar
-join tlost__oebs_prod.xxkoko.xxrtv_gl_bilag_v bilag on bilag.gl_sl_link_id = ar.gl_sl_link_id 
+from tlost__oebs_prod.xxoko.xxrtv_ar_transaksjons_v ar
+join tlost__oebs_prod.xxoko.xxrtv_gl_bilag_v bilag on bilag.gl_sl_link_id = ar.gl_sl_link_id 
 and bilag.gl_sl_link_table = ar.gl_sl_link_table
 ;
 
