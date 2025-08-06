@@ -11,7 +11,7 @@ install:
 	python3.11 -m venv .venv && \
 		$(PY) pip install --upgrade pip && \
 		$(PY) pip install uv && \
-		$(PY) uv pip install -r requirements-lock.txt -r requirements-dev.txt
+		$(PY) uv pip install -r requirements-lock.txt
 
 _lock-file:
 	python3.11 -m venv .venv-lock && \
