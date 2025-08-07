@@ -10,12 +10,14 @@ install:
 	rm -rf .venv
 	python3.11 -m venv .venv && \
 		$(PY) pip install --upgrade pip && \
-		$(PY) pip install -r requirements-lock.txt -r requirements-dev.txt
+		$(PY) pip install uv && \
+		$(PY) uv pip install -r requirements-lock.txt
 
 _lock-file:
 	python3.11 -m venv .venv-lock && \
 		$(PY_LOCK) pip install --upgrade pip && \
-		$(PY_LOCK) pip install -r requirements.txt && \
+		$(PY_LOCK) pip install uv && \
+		$(PY_LOCK) uv pip install -r requirements.txt && \
 		$(PY_LOCK) pip freeze > requirements-lock.txt
 	rm -rf .venv-lock
 
