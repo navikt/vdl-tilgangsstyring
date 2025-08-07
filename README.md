@@ -22,15 +22,33 @@ snow streamlit deploy --connection <connection> --replace
 snow sql -f post_hook.sql --connection <connection>
 ```
 
-
-
-## TODOs
-- Snow CLI med Github actions
-- __Lage__ dbt repo med ´row access policy´ macros
-- Legge inn Snowflake CLI connection variabel som en del av miljøet? 
-
+## Legge til brukere manuelt 
+Når du skal tildele brukere __av-maskering__ kjører du følgende script
+```sql
+insert into tilgangsstyring.app.bruker_tilganger_kostnadssted
+with vw as (
+select '<navn@nav.no>' as epost
+--union all
+--select '<navn@nav.no>' as epost
+)
+select 
+initcap(epost),
+'<kostandsstedsnivå>',
+'KOSTNADSSTEDSNIVA_<n>',
+'DETALJE TILGANG' ,
+'<begrunnelse>',
+to_date('<fra år>-12-01','yyyy-mm-dd'),
+to_date('<til år>-12-31','yyyy-mm-dd'),
+'<din epostadresse>',
+current_timestamp,
+null
+from vw
+;
+```
+Så kjører du `dbt build` mot `tilgangsstyring`-miljøet. 
 
 ## Fjerning av Policies 
+Slik fjerner du og rydder opp i policies
 ```sql
 use database db; 
 select distinct
