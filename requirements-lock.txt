@@ -100,6 +100,6 @@ typing-inspection==0.4.1
 typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
-uv==0.8.5
+uv==0.8.6
 watchdog==6.0.0
 zipp==3.23.0
