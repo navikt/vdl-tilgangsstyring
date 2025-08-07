@@ -18,16 +18,10 @@ databases:
 roles:
   - name: snowflake_users_reader
   - name: tilgangsstyring_developer
-  - name: tilgangsstyring_reporter
   - name: tilgangsstyring_admin
 
 warehouses:
   - name: tilgangsstyring_app
-
-users:
-  - name: srv_tilgangsstyring
-    type: legacy_service
-    network_policy: airflow_srv_brukere
 
 grants:
   - role: snowflake_users_reader
@@ -46,14 +40,6 @@ grants:
       - tilgangsstyring.policies
       - tilgangsstyring.csv
       - tilgangsstyring.oebs
-    to_users:
-      - srv_tilgangsstyring
-
-  - role: tilgangsstyring_reporter
-    warehouses:
-      - tilgangsstyring_app
-    read_on_schemas:
-      - tilgangsstyring.policies
 
   - role: tilgangsstyring_admin
     warehouses:
