@@ -1,108 +1,51 @@
+id: tilgangsstyring
 
-# Databases
 databases:
-  - tilgangsstyring:
-      shared: no
-      owner: sysadmin
-      schemas:
-        - app
-        - policies 
-        - oebs
-        - csv
-  - snowflake_users:
-      shared: no
-      owner: accountadmin
-      schemas:
-        - account_usage       
-# Roles
+  - name: tilgangsstyring
+    transient: false
+    data_retention_time_in_days: 90
+    schemas:
+      - name: app
+      - name: policies
+      - name: oebs
+      - name: csv
+  - name: snowflake_users
+    transient: false
+    data_retention_time_in_days: 90
+    schemas:
+      - name: account_usage
+
 roles:
-  - snowflake_users_reader:
-      warehouses:
-        - tilgangsstyring_app
-      privileges:
-        databases:
-          read:
-            - snowflake_users
-          write:
-            - snowflake_users
-        schemas:
-          read:
-            - snowflake_users.account_usage
-          write:
-            - snowflake_users.account_usage
-        tables:
-          read: 
-            - snowflake_users.account_usage.*
-      owner: useradmin
-  - tilgangsstyring_developer:
-      member_of: 
-        - snowflake_users_reader
-      warehouses:
-        - tilgangsstyring_app
-      privileges:
-        databases:
-          read:
-            - tilgangsstyring
-          write:
-            - tilgangsstyring
-        schemas:
-          read:
-            - tilgangsstyring.app
-            - tilgangsstyring.policies 
-            - tilgangsstyring.csv
-            - tilgangsstyring.oebs
-          write:
-            - tilgangsstyring.app
-            - tilgangsstyring.csv
-            - tilgangsstyring.policies  
-            - tilgangsstyring.oebs
-        tables:
-          read: 
-            - tilgangsstyring.app.*
-            - tilgangsstyring.csv.*
-            - tilgangsstyring.policies.*
-            - tilgangsstyring.oebs.*
-          write: 
-            - tilgangsstyring.app.*
-            - tilgangsstyring.csv.*
-            - tilgangsstyring.policies.*
-            - tilgangsstyring.oebs.*
-      owns:
-        tables:
-          - tilgangsstyring.app.*
-          - tilgangsstyring.csv.*
-          - tilgangsstyring.policies.*
-          - tilgangsstyring.oebs.*
-      owner: useradmin     
-  - tilgangsstyring_reporter:
-      privileges:
-        databases:
-          read:
-            - tilgangsstyring
-          write:
-            - tilgangsstyring
-        schemas:
-          read:
-            - tilgangsstyring.policies 
-        tables:
-          read:
-            - tilgangsstyring.policies.*
-      owner: useradmin
-  - tilgangsstyring_admin:
-      privileges:
-        databases:
-          read:
-            - tilgangsstyring
-          write:
-            - tilgangsstyring
-        schemas:
-          read:
-            - tilgangsstyring.policies 
-        tables:
-          read:
-            - tilgangsstyring.policies.*
-      owner: accountadmin
+  - name: snowflake_users_reader
+  - name: tilgangsstyring_developer
+  - name: tilgangsstyring_admin
+
 warehouses:
-  - tilgangsstyring_app:
-      size: x-small
-      owner: sysadmin
+  - name: tilgangsstyring_app
+
+grants:
+  - role: snowflake_users_reader
+    warehouses:
+      - tilgangsstyring_app
+    write_on_schemas:
+      - snowflake_users.account_usage
+    to_roles:
+      - tilgangsstyring_developer
+
+  - role: tilgangsstyring_developer
+    warehouses:
+      - tilgangsstyring_app
+    write_on_schemas:
+      - tilgangsstyring.app
+      - tilgangsstyring.policies
+      - tilgangsstyring.csv
+      - tilgangsstyring.oebs
+
+  - role: tilgangsstyring_admin
+    warehouses:
+      - tilgangsstyring_app
+    read_on_schemas:
+      - tilgangsstyring.policies
+    to_roles:
+      - regnskap_transformer
+      - faktura_transformer
