@@ -14,6 +14,32 @@ vdl_tilgangsstyring_profile:
       threads: 8
       client_session_keep_alive: False
       reuse_connections: True
+    dev:
+      type: snowflake
+      account: "wx23413.europe-west4.gcp"
+      user: "{{ env_var('DBT_USR') }}"
+      role: "tilgangsstyring_developer"
+      # SSO config
+      authenticator: externalbrowser
+      database: "dev_{{ env_var('DEV_NAME') }}_tilgangsstyring"
+      warehouse: "tilgangsstyring_app"
+      schema: "app"
+      threads: 8
+      client_session_keep_alive: False
+      reuse_connections: True
+    prod:
+      type: snowflake
+      account: "wx23413.europe-west4.gcp"
+      user: "{{ env_var('DBT_USR') }}"
+      role: "tilgangsstyring_developer"
+      # SSO config
+      authenticator: externalbrowser
+      database: "tilgangsstyring"
+      warehouse: "tilgangsstyring_app"
+      schema: "app"
+      threads: 8
+      client_session_keep_alive: False
+      reuse_connections: True
     transformer:
       type: "snowflake"
       account: "wx23413.europe-west4.gcp"
@@ -26,3 +52,4 @@ vdl_tilgangsstyring_profile:
       schema: "app"
       threads: 8
       client_session_keep_alive: False
+    
